@@ -12,5 +12,6 @@ public class Main {
         parser.fillArticle();
 
         StopWords sw = new StopWords();
+        System.out.println(sw.removeStopWordsFromArticle(parser.getArticles().get(0)));
     }
 }
