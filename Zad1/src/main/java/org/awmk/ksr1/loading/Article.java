@@ -1,14 +1,18 @@
 package org.awmk.ksr1.loading;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 public class Article {
      private String title;
-     private String body;
+     private List<String> body;
      private String country;
      private String topic;
 
     public Article(String title, String body, String country, String topic) {
         this.title = title;
-        this.body = body;
+        this.body = splitBody(body);
         this.country = country;
         this.topic = topic;
     }
@@ -21,11 +25,11 @@ public class Article {
         this.title = title;
     }
 
-    public String getBody() {
+    public List<String> getBody() {
         return body;
     }
 
-    public void setBody(String body) {
+    public void setBody(List<String> body) {
         this.body = body;
     }
 
@@ -43,6 +47,13 @@ public class Article {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public List<String> splitBody(String body) {
+        String str[] = body.split(" ");
+        List<String> bodyList = new LinkedList<String>();
+        bodyList = Arrays.asList(str);
+        return bodyList;
     }
 
     @Override
