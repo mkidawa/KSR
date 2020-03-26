@@ -7,6 +7,7 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ArticleParser {
@@ -44,16 +45,30 @@ public class ArticleParser {
     }
 
     public void fillArticle() {
+        articles = new LinkedList<Article>();
         for (Element el : doc.select("reuters")) {
             String title = el.select("title").text();
-            String body = el.select("body").text();
+            String dateline = el.select("dateline").text();
+            String body = el.select("text").text();
+            //boolean hasBody = el.select("body").hasText();
             String places = el.select("places").select("d").text();
             String topics = el.select("topics").select("d").text();
             Article a = new Article(title, body, places, topics);
-            System.out.println(a.toString());
-            //articles.add(a);
+            //System.out.println(a.toString());
+            if (!a.getBody().contains("blah") &&
+                !a.getCountry().contains(" ") &&
+                a.getCountry().matches("usa|west-germany|france|uk|canada|japan")) {
+                articles.add(a);
+            }
+
+            //System.out.println(hasBody);
+
         }
-        //System.out.println(articles.toString());
+        //System.out.println(doc.body());
+        for (Article ar : articles) {
+            System.out.println(ar.toString());
+        }
+        System.out.println(articles.size());
     }
 
 
