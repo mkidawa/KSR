@@ -1,8 +1,6 @@
 package org.awmk.ksr1.loading;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Article {
      private String title;
@@ -50,9 +48,8 @@ public class Article {
     }
 
     public List<String> splitBody(String body) {
-        String str[] = body.split(" ");
-        List<String> bodyList = new LinkedList<String>();
-        bodyList = Arrays.asList(str);
+        List<String> bodyList = new ArrayList<String>(Arrays.asList(body.replaceAll("[^a-zA-Z ]", "").split(" ")));
+        bodyList.removeAll(Arrays.asList("", null));
         return bodyList;
     }
 
