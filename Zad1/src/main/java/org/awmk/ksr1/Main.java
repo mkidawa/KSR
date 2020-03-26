@@ -1,6 +1,7 @@
 package org.awmk.ksr1;
 
 import org.awmk.ksr1.loading.ArticleParser;
+import org.awmk.ksr1.processing.Stemming;
 import org.awmk.ksr1.processing.StopWords;
 
 import java.io.IOException;
@@ -12,6 +13,9 @@ public class Main {
         parser.fillArticle();
 
         StopWords sw = new StopWords();
-        System.out.println(sw.removeStopWordsFromArticle(parser.getArticles().get(0)));
+        //System.out.println(sw.removeStopWordsFromArticle(parser.getArticles().get(0)));
+
+        Stemming s = new Stemming();
+        System.out.println(s.stemWords(parser.getArticles().get(0)));
     }
 }
