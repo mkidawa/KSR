@@ -63,11 +63,13 @@ public class ArticleParser {
             }
         }
         //System.out.println(doc.body());
-        for (Article ar : articles) {
-            System.out.println(ar.toString());
-        }
-        System.out.println(articles.size());
+//        for (Article ar : articles) {
+//            System.out.println(ar.toString());
+//        }
+//        System.out.println(articles.size());
     }
 
 
 }
+
+
