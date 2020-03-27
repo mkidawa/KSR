@@ -13,24 +13,16 @@ public class KeyWords {
     // lista słów kluczowych dla każdego kraju
     private List<List<String>> keywords;
 
+    public List<List<String>> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(List<List<String>> keywords) {
+        this.keywords = keywords;
+    }
+
     public KeyWords(List<Article> articles) throws IOException {
         List<List<String>> keywordsFromArticles = new ArrayList<List<String>>(); // rozmiar taki ile krajów
-        //List<List<String>> allWords = prepareWords(); // rozmiar taki ile artykułów
-        //System.out.println(allWords.size());
-//        for (List<String> articleBody : allWords) {
-//            for (String word : articleBody) {
-//                // term frequency
-//                float termFrequency = 0;
-//                for (String comparedWord : articleBody) {
-//                    if(comparedWord.equals(word)) {
-//                        termFrequency++;
-//                    }
-//                }
-//                termFrequency /= articleBody.size();
-//                System.out.println(allWords.indexOf(articleBody) + " " + word + " " + termFrequency);
-//            }
-//        }
-        // liczymy term frequency ale tak, żeby był dostęp do kraju
 
         Map<String, Float> usaMap = new HashMap();
         Map<String, Float> germanyMap = new HashMap();
@@ -137,21 +129,6 @@ public class KeyWords {
         keywordsFromArticles.add(new ArrayList<>(ukWords.keySet()));
         keywordsFromArticles.add(new ArrayList<>(canadaWords.keySet()));
         keywordsFromArticles.add(new ArrayList<>(japanWords.keySet()));
-
-
-        // inverse document frequency
-//        for (List<String> articleBody : allWords) {
-//            for (String word : articleBody) {
-//                float inverseDocumentFrequency = 0;
-//                for (List<String> article : allWords) {
-//                    if(article.contains(word)) {
-//                        inverseDocumentFrequency++;
-//                    }
-//                }
-//                inverseDocumentFrequency = allWords.size() / inverseDocumentFrequency;
-//                System.out.println(allWords.indexOf(articleBody) + " " + word + " " + inverseDocumentFrequency);
-//            }
-//        }
 
         this.keywords = keywordsFromArticles;
     }
