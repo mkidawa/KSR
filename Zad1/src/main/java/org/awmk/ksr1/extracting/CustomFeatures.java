@@ -1,16 +1,13 @@
 package org.awmk.ksr1.extracting;
 
 import org.awmk.ksr1.loading.Article;
-import org.awmk.ksr1.loading.ArticleParser;
-import org.awmk.ksr1.processing.StopWords;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CustomFeatures {
-    //private KeyWords kw = new KeyWords(new ArticleParser().processArticles());
-
     private List<Float> features;
 
     public List<Float> getFeatures() {
@@ -27,6 +24,12 @@ public class CustomFeatures {
         this.features.addAll(numberOfKeywords(kw, a));
         this.features.addAll(numberOfKeywordsFirst10Percent(kw, a));
         this.features.addAll(frequencyOfKeywords(kw, a));
+        this.features.add(lengthOfWord(a));
+        this.features.add((float) lengthOfArticle(a));
+        this.features.add(frequencyOfShortWords(a));
+        this.features.add(frequencyOfLongWords(a));
+        this.features.add(frequencyOfUniqueWords(a));
+        this.features.add(frequencyOfWordsStartingWithLower(a));
     }
 
     public List<Float> numberOfKeywords (KeyWords kw, Article a) {
@@ -71,5 +74,68 @@ public class CustomFeatures {
             freqOfKeywords.add(numOfKeywords / a.getBody().size());
         }
         return freqOfKeywords;
+    }
+
+    public float lengthOfWord (Article a) {
+        float length = 0;
+        for(String w : a.getBody()) {
+            length += w.length();
+        }
+        length /= a.getBody().size();
+        return length;
+    }
+
+    public int lengthOfArticle (Article a) {
+        return a.getBody().size();
+    }
+
+    public float frequencyOfShortWords (Article a) {
+        float freqOfShortWords = 0;
+        for(String w : a.getBody()) {
+            if (w.length() < 4) {
+                freqOfShortWords++;
+            }
+        }
+        freqOfShortWords /= a.getBody().size();
+        return freqOfShortWords;
+    }
+
+    public float frequencyOfLongWords (Article a) {
+        float freqOfLongWords = 0;
+        for (String w : a.getBody()) {
+            if (w.length() > 7) {
+                freqOfLongWords++;
+            }
+        }
+        freqOfLongWords /= a.getBody().size();
+        return freqOfLongWords;
+    }
+
+    public float numberOfUniqueWords (Article a) {
+        int numOfUniqueWords = 0;
+        for (String w : a.getBody()) {
+            if (Collections.frequency(a.getBody(), w) == 1) {
+                numOfUniqueWords++;
+            }
+        }
+        return numOfUniqueWords;
+    }
+
+    public float frequencyOfUniqueWords (Article a) {
+        return numberOfUniqueWords(a) / a.getBody().size();
+    }
+
+    public float numberOfWordsStartingWithLower (Article a) {
+        int numOfWords = 0;
+        for (String w : a.getBody()) {
+            if (w.matches("\\b[a-z][a-zA-Z0-9]*")) {
+                numOfWords++;
+            }
+        }
+        return numOfWords;
+    }
+
+    public float frequencyOfWordsStartingWithLower (Article a) {
+        return numberOfWordsStartingWithLower(a) / a.getBody().size();
     }
 }
