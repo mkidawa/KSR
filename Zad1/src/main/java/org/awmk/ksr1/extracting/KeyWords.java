@@ -6,10 +6,8 @@ import org.awmk.ksr1.processing.Stemming;
 import org.awmk.ksr1.processing.StopWords;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class KeyWords {
     // lista słów kluczowych dla każdego kraju
@@ -32,8 +30,20 @@ public class KeyWords {
 //                System.out.println(allWords.indexOf(articleBody) + " " + word + " " + termFrequency);
 //            }
 //        }
+        // liczymy term frequency ale tak, żeby był dostęp do kraju
+
+        Map<String, Float> usaMap = new HashMap();
+        Map<String, Float> germanyMap = new HashMap();
+        Map<String, Float> franceMap = new HashMap();
+        Map<String, Float> ukMap = new HashMap();
+        Map<String, Float> canadaMap = new HashMap();
+        Map<String, Float> japanMap = new HashMap();
+
         for (Article a : articles) {
             for (String word : a.getBody()) {
+                if(word.equals("Reuter") || word.equals("REUTER") || word.equals("mln")) {
+                    continue;
+                }
                 float termFrequency = 0;
                 for (String comparedWord : a.getBody()) {
                     if(comparedWord.equals(word)) {
@@ -41,11 +51,93 @@ public class KeyWords {
                     }
                 }
                 termFrequency /= a.getBody().size();
-                System.out.println(a.getCountry() + " " + word + " " + termFrequency);
+                float inverseDocumentFrequency = 0;
+                for (Article ar : articles) {
+                    if(!ar.getCountry().equals(a.getCountry())) {
+                        continue;
+                    }
+                    if(ar.getBody().contains(word)) {
+                        inverseDocumentFrequency++;
+                    }
+                }
+                inverseDocumentFrequency = articles.size() / inverseDocumentFrequency;
+                float tfidf = termFrequency / inverseDocumentFrequency;
+                //System.out.println(tfidf);
+                switch (a.getCountry()) {
+                    case "usa":
+                        usaMap.put(word, tfidf);
+                        break;
+                    case "west-germany":
+                        germanyMap.put(word, tfidf);
+                        break;
+                    case "france":
+                        franceMap.put(word, tfidf);
+                        break;
+                    case "uk":
+                        ukMap.put(word, tfidf);
+                        break;
+                    case "canada":
+                        canadaMap.put(word, tfidf);
+                        break;
+                    case "japan":
+                        japanMap.put(word, tfidf);
+                        break;
+                }
+                //System.out.println(a.getCountry() + " " + word + " " + tfidf);
             }
         }
-        // usunąć duplikaty
-        // przypisać do etykiety, albo i nie?
+
+        Map<String, Float> usaWords = usaMap
+                .entrySet()
+                .stream()
+                .sorted((Map.Entry.<String, Float>comparingByValue().reversed()))
+                .limit(20)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Map<String, Float> germanyWords = germanyMap
+                .entrySet()
+                .stream()
+                .sorted((Map.Entry.<String, Float>comparingByValue().reversed()))
+                .limit(20)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Map<String, Float> franceWords = franceMap
+                .entrySet()
+                .stream()
+                .sorted((Map.Entry.<String, Float>comparingByValue().reversed()))
+                .limit(20)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Map<String, Float> ukWords = ukMap
+                .entrySet()
+                .stream()
+                .sorted((Map.Entry.<String, Float>comparingByValue().reversed()))
+                .limit(20)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Map<String, Float> canadaWords = canadaMap
+                .entrySet()
+                .stream()
+                .sorted((Map.Entry.<String, Float>comparingByValue().reversed()))
+                .limit(20)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Map<String, Float> japanWords = japanMap
+                .entrySet()
+                .stream()
+                .sorted((Map.Entry.<String, Float>comparingByValue().reversed()))
+                .limit(20)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+//        System.out.println(usaWords);
+//        System.out.println(germanyWords);
+//        System.out.println(ukWords);
+//        System.out.println(franceWords);
+//        System.out.println(canadaWords);
+//        System.out.println(japanWords);
+
+        // dodać je do keywords zależnie od kraju
+        keywordsFromArticles.add(new ArrayList<>(usaWords.keySet()));
+        keywordsFromArticles.add(new ArrayList<>(germanyWords.keySet()));
+        keywordsFromArticles.add(new ArrayList<>(franceWords.keySet()));
+        keywordsFromArticles.add(new ArrayList<>(ukWords.keySet()));
+        keywordsFromArticles.add(new ArrayList<>(canadaWords.keySet()));
+        keywordsFromArticles.add(new ArrayList<>(japanWords.keySet()));
+
 
         // inverse document frequency
 //        for (List<String> articleBody : allWords) {
@@ -61,13 +153,6 @@ public class KeyWords {
 //            }
 //        }
 
-        // sortowanie malejąco
-        // wybranie pierwszych n np. 20 i to są słowa kluczowe
-        // dodać je do keywords zależnie od kraju
-
-        //Dictionary tfDict = new Hashtable();
-
-
         this.keywords = keywordsFromArticles;
     }
 
@@ -80,5 +165,12 @@ public class KeyWords {
             words.add(s.stemWords(sw.removeStopWordsFromArticle(a)));
         }
         return words;
+    }
+
+    @Override
+    public String toString() {
+        return "KeyWords{" +
+                "keywords=" + keywords +
+                '}';
     }
 }

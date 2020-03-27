@@ -13,5 +13,6 @@ public class Main {
         ArticleParser parser = new ArticleParser();
 
         KeyWords kw = new KeyWords(parser.processArticles());
+        System.out.println(kw.toString());
     }
 }
