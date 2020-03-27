@@ -1,12 +1,16 @@
 package org.awmk.ksr1.loading;
 
+import org.awmk.ksr1.processing.Stemming;
+import org.awmk.ksr1.processing.StopWords;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,9 +20,11 @@ public class ArticleParser {
     private List<Document> docs;
     private List<Article> articles;
 
-    public ArticleParser() {
+    public ArticleParser() throws IOException {
         File f = new File("D:\\studia\\ksr\\KSR\\Zad1\\src\\main\\resources\\articles");
         this.files = f.listFiles();
+        importFromFile();
+        fillArticle();
     }
 
     public ArticleParser(String path) {
@@ -67,6 +73,18 @@ public class ArticleParser {
         //    System.out.println(ar.toString());
         //}
         //System.out.println(articles.size());
+    }
+
+    // dokonuje stemizacji i stop listowania na załadowanych artykułach, ale tylko je zwraca, nigdzie nie przypisuje
+    public List<Article> processArticles () throws FileNotFoundException {
+        StopWords sw = new StopWords();
+        Stemming s = new Stemming();
+        List<Article> processedArticles = new ArrayList<Article>();
+        for (Article a : getArticles()) {
+            List<String> processedBody = s.stemWords(sw.removeStopWordsFromArticle(a));
+            processedArticles.add(new Article(a, processedBody));
+        }
+        return  processedArticles;
     }
 
 

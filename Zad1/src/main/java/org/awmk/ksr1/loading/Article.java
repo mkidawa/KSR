@@ -15,6 +15,13 @@ public class Article {
         this.topic = topic;
     }
 
+    public Article(Article article, List<String> body) {
+        this.title = article.getTitle();
+        this.body = body;
+        this.country = article.getCountry();
+        this.topic = article.getTopic();
+    }
+
     public String getTitle() {
         return title;
     }
