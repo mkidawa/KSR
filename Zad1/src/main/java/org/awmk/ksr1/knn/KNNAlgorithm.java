@@ -50,7 +50,7 @@ public class KNNAlgorithm {
         Map<Float, String> kNeighbours = distances
                 .entrySet()
                 .stream()
-                .sorted(Map.Entry.<Float, String>comparingByKey().reversed())
+                .sorted(Map.Entry.comparingByKey())
                 .limit(this.k)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         return kNeighbours;
