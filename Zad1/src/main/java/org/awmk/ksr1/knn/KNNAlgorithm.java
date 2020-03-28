@@ -46,13 +46,31 @@ public class KNNAlgorithm {
         return distancesMap;
     }
 
-    public void extractNeighbours(Map<Float, String> distances) {
+    public Map<Float, String> extractNeighbours(Map<Float, String> distances) {
         Map<Float, String> kNeighbours = distances
                 .entrySet()
                 .stream()
                 .sorted(Map.Entry.<Float, String>comparingByKey().reversed())
                 .limit(this.k)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        System.out.println(kNeighbours);
+        return kNeighbours;
+    }
+
+    public String assignCountry(Map<Float, String> kNeighbours) {
+        List<String> countries = new ArrayList<>(kNeighbours.values());
+        System.out.println(countries);
+        String assignedCountry = countries
+                .stream()
+                .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(1)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
+                .entrySet()
+                .iterator()
+                .next()
+                .getKey();
+        return assignedCountry;
     }
 }

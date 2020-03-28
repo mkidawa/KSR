@@ -34,7 +34,14 @@ public class Main {
 //        for (CustomFeatures cf : features) {
 //            System.out.println(knn.calculateDistances(cf.getFeatures(), vectors, new EuclideanMetric()));
 //        }
-        knn.extractNeighbours(knn.calcDsitancesWithLabels(features.get(0).getFeatures(), features, new EuclideanMetric()));
+        for(CustomFeatures cf : features) {
+            String guessedCountry = knn.assignCountry(knn.extractNeighbours(knn.calcDsitancesWithLabels(cf.getFeatures(), features, new EuclideanMetric())));
+            System.out.println(cf.getCountry() + " guessed: " + guessedCountry);
+            if (cf.getCountry().equals(guessedCountry)) {
+                System.out.println("gituwa siema");
+            }
+            else System.out.println("no chujowo");
+        }
 
     }
 }
