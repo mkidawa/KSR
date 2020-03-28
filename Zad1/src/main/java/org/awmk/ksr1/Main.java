@@ -19,7 +19,7 @@ public class Main {
 
         KeyWords kw = new KeyWords(parser.processArticles());
         //System.out.println(kw.toString());
-        KNNAlgorithm knn = new KNNAlgorithm();
+        KNNAlgorithm knn = new KNNAlgorithm(10);
         List<CustomFeatures> features = new ArrayList<>();
         for (Article a : parser.getArticles()) {
             CustomFeatures cf = new CustomFeatures(kw, a);
@@ -27,13 +27,14 @@ public class Main {
             features.add(cf);
             //System.out.println(knn.calculateDistances(cf));
         }
-        List<List<Float>> vectors = new ArrayList<>();
-        for (CustomFeatures cf : features) {
-            vectors.add(cf.getFeatures());
-        }
-        for (CustomFeatures cf : features) {
-            System.out.println(knn.calculateDistances(cf.getFeatures(), vectors, new EuclideanMetric()));
-        }
+//        List<List<Float>> vectors = new ArrayList<>();
+//        for (CustomFeatures cf : features) {
+//            vectors.add(cf.getFeatures());
+//        }
+//        for (CustomFeatures cf : features) {
+//            System.out.println(knn.calculateDistances(cf.getFeatures(), vectors, new EuclideanMetric()));
+//        }
+        knn.extractNeighbours(knn.calcDsitancesWithLabels(features.get(0).getFeatures(), features, new EuclideanMetric()));
 
     }
 }

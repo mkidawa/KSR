@@ -88,7 +88,7 @@ public class KeyWords {
         Map<String, Float> germanyWords = germanyMap
                 .entrySet()
                 .stream()
-                .sorted((Map.Entry.<String, Float>comparingByValue().reversed()))
+                .sorted(Map.Entry.<String, Float>comparingByValue().reversed())
                 .limit(20)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         Map<String, Float> franceWords = franceMap
