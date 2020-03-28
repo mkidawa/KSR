@@ -84,7 +84,7 @@ public class ArticleParser {
             List<String> processedBody = s.stemWords(sw.removeStopWordsFromArticle(a));
             processedArticles.add(new Article(a, processedBody));
         }
-        return  processedArticles;
+        return processedArticles;
     }
 
 

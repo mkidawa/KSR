@@ -52,8 +52,8 @@ public class KeyWords {
                         inverseDocumentFrequency++;
                     }
                 }
-                inverseDocumentFrequency = articles.size() / inverseDocumentFrequency;
-                float tfidf = termFrequency / inverseDocumentFrequency;
+                inverseDocumentFrequency = (float) Math.log(articles.size() / inverseDocumentFrequency);
+                float tfidf = termFrequency * inverseDocumentFrequency;
                 //System.out.println(tfidf);
                 switch (a.getCountry()) {
                     case "usa":
