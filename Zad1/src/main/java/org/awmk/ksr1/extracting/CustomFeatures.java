@@ -9,6 +9,7 @@ import java.util.List;
 
 public class CustomFeatures {
     private List<Float> features;
+    private String country;
 
     public List<Float> getFeatures() {
         return features;
@@ -16,6 +17,14 @@ public class CustomFeatures {
 
     public void setFeatures(List<Float> features) {
         this.features = features;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
 
@@ -30,6 +39,8 @@ public class CustomFeatures {
         this.features.add(frequencyOfLongWords(a));
         this.features.add(frequencyOfUniqueWords(a));
         this.features.add(frequencyOfWordsStartingWithLower(a));
+        this.features = normalizeVector(this.features);
+        this.country = a.getCountry();
     }
 
     public List<Float> numberOfKeywords (KeyWords kw, Article a) {
@@ -137,5 +148,18 @@ public class CustomFeatures {
 
     public float frequencyOfWordsStartingWithLower (Article a) {
         return numberOfWordsStartingWithLower(a) / a.getBody().size();
+    }
+
+    public List<Float> normalizeVector (List<Float> features) {
+        float vectorLength = 0;
+        for (Float f : features) {
+            vectorLength += f * f;
+        }
+        vectorLength = (float) Math.sqrt(vectorLength);
+        List<Float> normalizedFeatures = new ArrayList<>();
+        for (Float f : features) {
+            normalizedFeatures.add(f / vectorLength);
+        }
+        return normalizedFeatures;
     }
 }
