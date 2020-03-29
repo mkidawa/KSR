@@ -1,6 +1,7 @@
 package org.awmk.ksr1.extracting;
 
 import org.awmk.ksr1.loading.Article;
+import org.awmk.ksr1.metrics.Measure;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,11 +29,11 @@ public class CustomFeatures {
     }
 
 
-    public CustomFeatures(KeyWords kw, Article a) throws IOException {
+    public CustomFeatures(Measure m, KeyWords kw, Article a) throws IOException {
         this.features = new ArrayList<>();
-        this.features.addAll(numberOfKeywords(kw, a));
-        this.features.addAll(numberOfKeywordsFirst10Percent(kw, a));
-        this.features.addAll(frequencyOfKeywords(kw, a));
+        this.features.addAll(numberOfKeywords(m, kw, a));
+        this.features.addAll(numberOfKeywordsFirst10Percent(m, kw, a));
+        this.features.addAll(frequencyOfKeywords(m, kw, a));
         this.features.add(lengthOfWord(a));
         this.features.add((float) lengthOfArticle(a));
         this.features.add(frequencyOfShortWords(a));
@@ -43,13 +44,16 @@ public class CustomFeatures {
         this.country = a.getCountry();
     }
 
-    public List<Float> numberOfKeywords (KeyWords kw, Article a) {
+    public List<Float> numberOfKeywords (Measure m, KeyWords kw, Article a) {
         List<Float> numsOfKeywords = new ArrayList<>();
         for (List<String> countryKeywords : kw.getKeywords()) {
             float numOfKeywords = 0;
             for (String keyword : countryKeywords) {
-                if(a.getBody().contains(keyword)) {
-                    numOfKeywords++;
+//                if(a.getBody().contains(keyword)) {
+//                    numOfKeywords++;
+//                }
+                for (String word : a.getBody()) {
+                    numOfKeywords += m.compareWords(word, keyword);
                 }
             }
             numsOfKeywords.add(numOfKeywords);
@@ -57,15 +61,16 @@ public class CustomFeatures {
         return numsOfKeywords;
     }
 
-    public List<Float> numberOfKeywordsFirst10Percent (KeyWords kw, Article a) {
+    public List<Float> numberOfKeywordsFirst10Percent (Measure m, KeyWords kw, Article a) {
         List<Float> numsOfKeywords = new ArrayList<>();
         for (List<String> countryKeywords : kw.getKeywords()) {
             float numOfKeywords = 0;
             for (String keyword : countryKeywords) {
                 for (int i = 0; i < a.getBody().size() * 0.1; i++) {
-                    if(a.getBody().get(i).equals(keyword)) {
-                        numOfKeywords++;
-                    }
+//                    if(a.getBody().get(i).equals(keyword)) {
+//                        numOfKeywords++;
+//                    }
+                    numOfKeywords += m.compareWords(a.getBody().get(i), keyword);
                 }
             }
             numsOfKeywords.add(numOfKeywords);
@@ -73,13 +78,16 @@ public class CustomFeatures {
         return numsOfKeywords;
     }
 
-    public List<Float> frequencyOfKeywords (KeyWords kw, Article a) {
+    public List<Float> frequencyOfKeywords (Measure m, KeyWords kw, Article a) {
         List<Float> freqOfKeywords = new ArrayList<>();
         for (List<String> countryKeywords : kw.getKeywords()) {
             float numOfKeywords = 0;
             for (String keyword : countryKeywords) {
-                if(a.getBody().contains(keyword)) {
-                    numOfKeywords++;
+//                if(a.getBody().contains(keyword)) {
+//                    numOfKeywords++;
+//                }
+                for (String word : a.getBody()) {
+                    numOfKeywords += m.compareWords(word, keyword);
                 }
             }
             freqOfKeywords.add(numOfKeywords / a.getBody().size());

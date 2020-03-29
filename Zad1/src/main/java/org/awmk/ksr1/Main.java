@@ -7,6 +7,8 @@ import org.awmk.ksr1.knn.KNNAlgorithm;
 import org.awmk.ksr1.loading.Article;
 import org.awmk.ksr1.loading.ArticleParser;
 import org.awmk.ksr1.metrics.EuclideanMetric;
+import org.awmk.ksr1.metrics.GeneralizedNGram;
+import org.awmk.ksr1.metrics.Measure;
 import org.awmk.ksr1.processing.Stemming;
 import org.awmk.ksr1.processing.StopWords;
 
@@ -25,16 +27,18 @@ public class Main {
 
         List<List<Article>> splittedDataset = ds.splitData(parser.getArticles(), 0.6); // index 0 - training, 1 - testing
 
+        Measure measure = new GeneralizedNGram();
+
         List<CustomFeatures> featuresTraining = new ArrayList<>();
         for (Article a : splittedDataset.get(0)) {
-            CustomFeatures cf = new CustomFeatures(kw, a);
+            CustomFeatures cf = new CustomFeatures(measure, kw, a);
             //System.out.println(cf.getFeatures());
             featuresTraining.add(cf);
             //System.out.println(knn.calculateDistances(cf));
         }
         List<CustomFeatures> featuresTesting = new ArrayList<>();
         for (Article a : splittedDataset.get(1)) {
-            CustomFeatures cf = new CustomFeatures(kw, a);
+            CustomFeatures cf = new CustomFeatures(measure, kw, a);
             featuresTesting.add(cf);
         }
 
