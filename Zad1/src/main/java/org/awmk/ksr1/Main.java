@@ -2,6 +2,7 @@ package org.awmk.ksr1;
 
 import org.awmk.ksr1.extracting.CustomFeatures;
 import org.awmk.ksr1.extracting.KeyWords;
+import org.awmk.ksr1.knn.DataSplitter;
 import org.awmk.ksr1.knn.KNNAlgorithm;
 import org.awmk.ksr1.loading.Article;
 import org.awmk.ksr1.loading.ArticleParser;
@@ -20,22 +21,25 @@ public class Main {
         KeyWords kw = new KeyWords(parser.processArticles());
         //System.out.println(kw.toString());
         KNNAlgorithm knn = new KNNAlgorithm(10);
-        List<CustomFeatures> features = new ArrayList<>();
-        for (Article a : parser.getArticles()) {
+        DataSplitter ds = new DataSplitter();
+
+        List<List<Article>> splittedDataset = ds.splitData(parser.getArticles(), 0.6); // index 0 - training, 1 - testing
+
+        List<CustomFeatures> featuresTraining = new ArrayList<>();
+        for (Article a : splittedDataset.get(0)) {
             CustomFeatures cf = new CustomFeatures(kw, a);
             //System.out.println(cf.getFeatures());
-            features.add(cf);
+            featuresTraining.add(cf);
             //System.out.println(knn.calculateDistances(cf));
         }
-//        List<List<Float>> vectors = new ArrayList<>();
-//        for (CustomFeatures cf : features) {
-//            vectors.add(cf.getFeatures());
-//        }
-//        for (CustomFeatures cf : features) {
-//            System.out.println(knn.calculateDistances(cf.getFeatures(), vectors, new EuclideanMetric()));
-//        }
-        for(CustomFeatures cf : features) {
-            String guessedCountry = knn.assignCountry(knn.extractNeighbours(knn.calcDsitancesWithLabels(cf.getFeatures(), features, new EuclideanMetric())));
+        List<CustomFeatures> featuresTesting = new ArrayList<>();
+        for (Article a : splittedDataset.get(1)) {
+            CustomFeatures cf = new CustomFeatures(kw, a);
+            featuresTesting.add(cf);
+        }
+
+        for(CustomFeatures cf : featuresTesting) {
+            String guessedCountry = knn.assignCountry(knn.extractNeighbours(knn.calcDsitancesWithLabels(cf.getFeatures(), featuresTraining, new EuclideanMetric())));
             System.out.println(cf.getCountry() + " guessed: " + guessedCountry);
             if (cf.getCountry().equals(guessedCountry)) {
                 System.out.println("gituwa siema");

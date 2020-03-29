@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 public class KNNAlgorithm {
     private int k;
-    private int testingSetPercent;
 
     public int getK() {
         return k;
@@ -18,13 +17,6 @@ public class KNNAlgorithm {
         this.k = k;
     }
 
-    public int getTestingSetPercent() {
-        return testingSetPercent;
-    }
-
-    public void setTestingSetPercent(int testingSetPercent) {
-        this.testingSetPercent = testingSetPercent;
-    }
 
     public KNNAlgorithm(int k) {
         this.k = k;
