@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Article {
      private String title;
-     private List<String> body;
+     private HashSet<String> body;
      private String country;
      private String topic;
 
@@ -15,7 +15,7 @@ public class Article {
         this.topic = topic;
     }
 
-    public Article(Article article, List<String> body) {
+    public Article(Article article, HashSet<String> body) {
         this.title = article.getTitle();
         this.body = body;
         this.country = article.getCountry();
@@ -30,11 +30,11 @@ public class Article {
         this.title = title;
     }
 
-    public List<String> getBody() {
+    public HashSet<String> getBody() {
         return body;
     }
 
-    public void setBody(List<String> body) {
+    public void setBody(HashSet<String> body) {
         this.body = body;
     }
 
@@ -54,8 +54,8 @@ public class Article {
         this.topic = topic;
     }
 
-    public List<String> splitBody(String body) {
-        List<String> bodyList = new ArrayList<String>(Arrays.asList(body.replaceAll("[^a-zA-Z ]", "").split(" ")));
+    public HashSet<String> splitBody(String body) {
+        HashSet<String> bodyList = new HashSet<String>(Arrays.asList(body.replaceAll("[^a-zA-Z ]", "").split(" ")));
         bodyList.removeAll(Arrays.asList("", null));
         return bodyList;
     }

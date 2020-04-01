@@ -4,6 +4,7 @@ import org.awmk.ksr1.loading.Article;
 import org.awmk.ksr1.loading.ArticleParser;
 import org.awmk.ksr1.processing.Stemming;
 import org.awmk.ksr1.processing.StopWords;
+import org.awmk.ksr1.processing.Stemming;
 
 import java.io.IOException;
 import java.util.*;

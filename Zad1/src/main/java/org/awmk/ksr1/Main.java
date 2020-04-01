@@ -8,6 +8,7 @@ import org.awmk.ksr1.loading.Article;
 import org.awmk.ksr1.loading.ArticleParser;
 import org.awmk.ksr1.metrics.EuclideanMetric;
 import org.awmk.ksr1.metrics.GeneralizedNGram;
+import org.awmk.ksr1.metrics.GeneralizedNGramWithRestraints;
 import org.awmk.ksr1.metrics.Measure;
 import org.awmk.ksr1.processing.Stemming;
 import org.awmk.ksr1.processing.StopWords;
@@ -22,12 +23,13 @@ public class Main {
 
         KeyWords kw = new KeyWords(parser.processArticles());
         //System.out.println(kw.toString());
-        KNNAlgorithm knn = new KNNAlgorithm(10);
+        KNNAlgorithm knn = new KNNAlgorithm(7);
         DataSplitter ds = new DataSplitter();
 
         List<List<Article>> splittedDataset = ds.splitData(parser.getArticles(), 0.6); // index 0 - training, 1 - testing
 
-        Measure measure = new GeneralizedNGram();
+//        Measure measure = new GeneralizedNGram();
+        Measure measure = new GeneralizedNGramWithRestraints();
 
         List<CustomFeatures> featuresTraining = new ArrayList<>();
         for (Article a : splittedDataset.get(0)) {
@@ -46,9 +48,9 @@ public class Main {
             String guessedCountry = knn.assignCountry(knn.extractNeighbours(knn.calcDsitancesWithLabels(cf.getFeatures(), featuresTraining, new EuclideanMetric())));
             System.out.println(cf.getCountry() + " guessed: " + guessedCountry);
             if (cf.getCountry().equals(guessedCountry)) {
-                System.out.println("gituwa siema");
+                System.out.println("POPRAWNIE");
             }
-            else System.out.println("no chujowo");
+            else System.out.println("BLAD");
         }
 
     }
