@@ -4,14 +4,17 @@ import org.awmk.ksr1.loading.Article;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 
 public class StopWords {
-    private HashSet<String> words;
+    private List<String> words;
 
     public StopWords() throws FileNotFoundException {
-        this.words = new HashSet<String>();
-        File file = new File("D:\\Programowanie\\KSR\\Zad1\\src\\main\\resources\\stopwords\\stopwords.txt");
+        this.words = new LinkedList<String>();
+        File file = new File("D:\\studia\\ksr\\KSR\\Zad1\\src\\main\\resources\\stopwords\\stopwords.txt");
         Scanner s = new Scanner(file);
         while (s.hasNext()) {
             words.add(s.next());
@@ -19,8 +22,8 @@ public class StopWords {
         s.close();
     }
 
-    public HashSet<String> removeStopWordsFromArticle (Article a) {
-        HashSet<String> bodyWithoutStopWords = new HashSet<String>();
+    public List<String> removeStopWordsFromArticle (Article a) {
+        List<String> bodyWithoutStopWords = new ArrayList<String>();
         for (String b : a.getBody()) {
             if (!words.contains(b.toLowerCase())) {
                 bodyWithoutStopWords.add(b);

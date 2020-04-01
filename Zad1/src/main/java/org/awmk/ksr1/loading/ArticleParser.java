@@ -11,18 +11,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ArticleParser {
     private File[] files;
     private String path;
-    private HashSet<Document> docs;
-    private HashSet<Article> articles;
+    private List<Document> docs;
+    private List<Article> articles;
 
     public ArticleParser() throws IOException {
-        File f = new File("D:\\Programowanie\\KSR\\Zad1\\src\\main\\resources\\articles");
+        File f = new File("D:\\studia\\ksr\\KSR\\Zad1\\src\\main\\resources\\articles");
         this.files = f.listFiles();
         importFromFile();
         fillArticle();
@@ -36,23 +35,23 @@ public class ArticleParser {
         return path;
     }
 
-    public HashSet<Article> getArticles() {
+    public List<Article> getArticles() {
         return articles;
     }
 
-    public void setArticles(HashSet<Article> articles) {
+    public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
 
     public void importFromFile() throws IOException {
-        docs = new HashSet<Document>();
+        docs = new LinkedList<Document>();
         for (File f : files) {
             docs.add(Jsoup.parse(f, "UTF-8", ""));
         }
     }
 
     public void fillArticle() {
-        articles = new HashSet<Article>();
+        articles = new LinkedList<Article>();
         for (Document doc : docs) {
             for (Element el : doc.select("reuters")) {
                 String title = el.select("title").text();
@@ -77,12 +76,12 @@ public class ArticleParser {
     }
 
     // dokonuje stemizacji i stop listowania na załadowanych artykułach, ale tylko je zwraca, nigdzie nie przypisuje
-    public HashSet<Article> processArticles () throws FileNotFoundException {
+    public List<Article> processArticles () throws FileNotFoundException {
         StopWords sw = new StopWords();
         Stemming s = new Stemming();
-        HashSet<Article> processedArticles = new HashSet<Article>();
+        List<Article> processedArticles = new ArrayList<Article>();
         for (Article a : getArticles()) {
-            HashSet<String> processedBody = s.stemWords(sw.removeStopWordsFromArticle(a));
+            List<String> processedBody = s.stemWords(sw.removeStopWordsFromArticle(a));
             processedArticles.add(new Article(a, processedBody));
         }
         return processedArticles;
