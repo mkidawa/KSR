@@ -8,6 +8,7 @@ import org.awmk.ksr1.loading.Article;
 import org.awmk.ksr1.loading.ArticleParser;
 import org.awmk.ksr1.metrics.EuclideanMetric;
 import org.awmk.ksr1.metrics.GeneralizedNGram;
+import org.awmk.ksr1.metrics.GeneralizedNGramWithRestraints;
 import org.awmk.ksr1.metrics.Measure;
 import org.awmk.ksr1.processing.Stemming;
 import org.awmk.ksr1.processing.StopWords;
@@ -27,7 +28,7 @@ public class Main {
 
         List<List<Article>> splittedDataset = ds.splitData(parser.getArticles(), 0.6); // index 0 - training, 1 - testing
 
-        Measure measure = new GeneralizedNGram();
+        Measure measure = new GeneralizedNGramWithRestraints();
 
         List<CustomFeatures> featuresTraining = new ArrayList<>();
         for (Article a : splittedDataset.get(0)) {
