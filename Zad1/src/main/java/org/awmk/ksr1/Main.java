@@ -31,16 +31,28 @@ public class Main {
 
         Measure measure = new GeneralizedNGram();
 
+        boolean[] filter = new boolean[] {
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+        };
+
         List<CustomFeatures> featuresTraining = new ArrayList<>();
         for (Article a : splittedDataset.get(0)) {
-            CustomFeatures cf = new CustomFeatures(measure, kw, a);
+            CustomFeatures cf = new CustomFeatures(measure, kw, a, filter);
             //System.out.println(cf.getFeatures());
             featuresTraining.add(cf);
             //System.out.println(knn.calculateDistances(cf));
         }
         List<CustomFeatures> featuresTesting = new ArrayList<>();
         for (Article a : splittedDataset.get(1)) {
-            CustomFeatures cf = new CustomFeatures(measure, kw, a);
+            CustomFeatures cf = new CustomFeatures(measure, kw, a, filter);
             featuresTesting.add(cf);
         }
 

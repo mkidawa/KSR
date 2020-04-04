@@ -50,7 +50,7 @@ public class KNNAlgorithm {
 
     public String assignCountry(Map<Float, String> kNeighbours) {
         List<String> countries = new ArrayList<>(kNeighbours.values());
-        System.out.println(countries);
+        //System.out.println(countries);
         String assignedCountry = countries
                 .stream()
                 .collect(Collectors.groupingBy(e -> e, Collectors.counting()))

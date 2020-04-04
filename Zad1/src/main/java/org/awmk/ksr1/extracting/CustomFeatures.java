@@ -29,17 +29,19 @@ public class CustomFeatures {
     }
 
 
-    public CustomFeatures(Measure m, KeyWords kw, Article a) throws IOException {
+    public CustomFeatures(Measure m, KeyWords kw, Article a, boolean[] filter) throws IOException {
         this.features = new ArrayList<>();
-        this.features.addAll(numberOfKeywords(m, kw, a));
-        this.features.addAll(numberOfKeywordsFirst10Percent(m, kw, a));
-        this.features.addAll(frequencyOfKeywords(m, kw, a));
-        this.features.add(lengthOfWord(a));
-        this.features.add((float) lengthOfArticle(a));
-        this.features.add(frequencyOfShortWords(a));
-        this.features.add(frequencyOfLongWords(a));
-        this.features.add(frequencyOfUniqueWords(a));
-        this.features.add(frequencyOfWordsStartingWithLower(a));
+
+        if (filter[0]) this.features.addAll(numberOfKeywords(m, kw, a));
+        if (filter[1]) this.features.addAll(numberOfKeywordsFirst10Percent(m, kw, a));
+        if (filter[2]) this.features.addAll(frequencyOfKeywords(m, kw, a));
+        if (filter[3]) this.features.add(lengthOfWord(a));
+        if (filter[4]) this.features.add((float) lengthOfArticle(a));
+        if (filter[5]) this.features.add(frequencyOfShortWords(a));
+        if (filter[6]) this.features.add(frequencyOfLongWords(a));
+        if (filter[7]) this.features.add(frequencyOfUniqueWords(a));
+        if (filter[8]) this.features.add(frequencyOfWordsStartingWithLower(a));
+
         this.features = normalizeVector(this.features);
         this.country = a.getCountry();
     }
