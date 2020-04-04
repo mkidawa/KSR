@@ -21,15 +21,15 @@ public class Main {
     public static void main(String[] args) throws IOException {
         ArticleParser parser = new ArticleParser();
 
-//        KeyWords kw = new KeyWords(parser.processArticles());
+        //KeyWords kw = new KeyWords(parser.processArticles());
         KeyWords kw = new KeyWords("src/main/resources/keywords/kw.txt");
-        //System.out.println(kw.toString());
+
         KNNAlgorithm knn = new KNNAlgorithm(10);
         DataSplitter ds = new DataSplitter();
 
         List<List<Article>> splittedDataset = ds.splitData(parser.getArticles(), 0.6); // index 0 - training, 1 - testing
 
-        Measure measure = new GeneralizedNGramWithRestraints();
+        Measure measure = new GeneralizedNGram();
 
         List<CustomFeatures> featuresTraining = new ArrayList<>();
         for (Article a : splittedDataset.get(0)) {
@@ -44,14 +44,27 @@ public class Main {
             featuresTesting.add(cf);
         }
 
+        List<String> predicted = new ArrayList<>();
+        List<String> actual = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+        labels.add("usa");
+        labels.add("west-germany");
+        labels.add("france");
+        labels.add("uk");
+        labels.add("canada");
+        labels.add("japan");
+
         for(CustomFeatures cf : featuresTesting) {
-            String guessedCountry = knn.assignCountry(knn.extractNeighbours(knn.calcDsitancesWithLabels(cf.getFeatures(), featuresTraining, new EuclideanMetric())));
-            System.out.println(cf.getCountry() + " guessed: " + guessedCountry);
-            if (cf.getCountry().equals(guessedCountry)) {
-                System.out.println("gituwa siema");
-            }
-            else System.out.println("no chujowo");
+            String predictedCountry = knn.assignCountry(knn.extractNeighbours(knn.calcDsitancesWithLabels(cf.getFeatures(), featuresTraining, new EuclideanMetric())));
+            //System.out.println(cf.getCountry() + " guessed: " + predictedCountry);
+            predicted.add(predictedCountry);
+            actual.add(cf.getCountry());
         }
+
+        Estimation estimation = new Estimation(predicted, actual, labels);
+        System.out.println(estimation.getAccuracy());
+        System.out.println(estimation.getPrecision());
+        System.out.println(estimation.getRecall());
 
     }
 }
