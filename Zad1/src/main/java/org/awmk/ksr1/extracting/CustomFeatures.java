@@ -53,7 +53,7 @@ public class CustomFeatures {
 //                    numOfKeywords++;
 //                }
                 for (String word : a.getBody()) {
-                    numOfKeywords += m.compareWords(word, keyword);
+                    numOfKeywords += m.compareWords(word.toLowerCase(), keyword.toLowerCase());
                 }
             }
             numsOfKeywords.add(numOfKeywords);
@@ -70,7 +70,7 @@ public class CustomFeatures {
 //                    if(a.getBody().get(i).equals(keyword)) {
 //                        numOfKeywords++;
 //                    }
-                    numOfKeywords += m.compareWords(a.getBody().get(i), keyword);
+                    numOfKeywords += m.compareWords(a.getBody().get(i).toLowerCase(), keyword.toLowerCase());
                 }
             }
             numsOfKeywords.add(numOfKeywords);
@@ -87,7 +87,7 @@ public class CustomFeatures {
 //                    numOfKeywords++;
 //                }
                 for (String word : a.getBody()) {
-                    numOfKeywords += m.compareWords(word, keyword);
+                    numOfKeywords += m.compareWords(word.toLowerCase(), keyword.toLowerCase());
                 }
             }
             freqOfKeywords.add(numOfKeywords / a.getBody().size());

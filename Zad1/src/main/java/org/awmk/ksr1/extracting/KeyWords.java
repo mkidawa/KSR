@@ -5,6 +5,8 @@ import org.awmk.ksr1.loading.ArticleParser;
 import org.awmk.ksr1.processing.Stemming;
 import org.awmk.ksr1.processing.StopWords;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,6 +21,10 @@ public class KeyWords {
 
     public void setKeywords(List<List<String>> keywords) {
         this.keywords = keywords;
+    }
+
+    public KeyWords(File file) {
+
     }
 
     public KeyWords(List<Article> articles) throws IOException {
@@ -131,17 +137,29 @@ public class KeyWords {
         keywordsFromArticles.add(new ArrayList<>(japanWords.keySet()));
 
         this.keywords = keywordsFromArticles;
+        writeToFile("src/main/resources/keywords/kw.txt", this.keywords);
     }
 
-    public List<List<String>> prepareWords () throws IOException {
-        List<List<String>> words = new ArrayList<List<String>>();
-        ArticleParser parser = new ArticleParser();
-        StopWords sw = new StopWords();
-        Stemming s = new Stemming();
-        for (Article a : parser.getArticles()) {
-            words.add(s.stemWords(sw.removeStopWordsFromArticle(a)));
+    public void writeToFile(String path, List<List<String>> data) {
+        File file = new File(path);
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(file);
+            for(List<String> l : data) {
+                for(String w : l) {
+                    fw.write(w + " ");
+                }
+                fw.write("|");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return words;
     }
 
     @Override
