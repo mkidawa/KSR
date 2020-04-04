@@ -21,7 +21,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         ArticleParser parser = new ArticleParser();
 
-        KeyWords kw = new KeyWords(parser.processArticles());
+//        KeyWords kw = new KeyWords(parser.processArticles());
+        KeyWords kw = new KeyWords("src/main/resources/keywords/kw.txt");
         //System.out.println(kw.toString());
         KNNAlgorithm knn = new KNNAlgorithm(10);
         DataSplitter ds = new DataSplitter();

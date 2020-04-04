@@ -5,9 +5,7 @@ import org.awmk.ksr1.loading.ArticleParser;
 import org.awmk.ksr1.processing.Stemming;
 import org.awmk.ksr1.processing.StopWords;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,8 +21,8 @@ public class KeyWords {
         this.keywords = keywords;
     }
 
-    public KeyWords(File file) {
-
+    public KeyWords(String path) throws IOException {
+        this.keywords = loadFromFile(path);
     }
 
     public KeyWords(List<Article> articles) throws IOException {
@@ -155,11 +153,33 @@ public class KeyWords {
             e.printStackTrace();
         } finally {
             try {
+                assert fw != null;
                 fw.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<List<String>> loadFromFile(String path) throws IOException {
+        BufferedReader fileReader = null;
+        List<List<String>> keywords = null;
+        try {
+            fileReader = new BufferedReader(new FileReader(path));
+            String full = fileReader.readLine();
+            String[] list = full.split("\\|");
+            keywords = new ArrayList<>();
+            for (String l : list) {
+                keywords.add(Arrays.asList(l.split(" ")));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileReader != null) {
+                fileReader.close();
+            }
+        }
+        return keywords;
     }
 
     @Override
