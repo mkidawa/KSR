@@ -6,9 +6,9 @@ public class Article {
      private String title;
      private List<String> body;
      private String country;
-     private String topic;
+     private List<String> topic;
 
-    public Article(String title, String body, String country, String topic) {
+    public Article(String title, String body, String country, List<String> topic) {
         this.title = title;
         this.body = splitBody(body);
         this.country = country;
@@ -46,11 +46,11 @@ public class Article {
         this.country = country;
     }
 
-    public String getTopic() {
+    public List<String> getTopic() {
         return topic;
     }
 
-    public void setTopic(String topic) {
+    public void setTopic(List<String> topic) {
         this.topic = topic;
     }
 

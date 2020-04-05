@@ -21,6 +21,10 @@ public class KeyWords {
         this.keywords = keywords;
     }
 
+    public KeyWords(int x) {
+        this.keywords = null;
+    }
+
     public KeyWords(String path) throws IOException {
         this.keywords = loadFromFile(path);
     }

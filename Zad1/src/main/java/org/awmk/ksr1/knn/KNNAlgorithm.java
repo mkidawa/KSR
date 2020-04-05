@@ -38,6 +38,17 @@ public class KNNAlgorithm {
         return distancesMap;
     }
 
+    public Map<Float, String> calcDsitancesWithLabelsWhenTopics (List<Float> featuresVector, List<CustomFeatures> vectors, Metric metric) {
+        Map<Float, String> distancesMap = new HashMap<>();
+        for (CustomFeatures cf : vectors) {
+            for (String label : cf.getTopics()) {
+                distancesMap.put(metric.calculateDistance(featuresVector, cf.getFeatures()), label);
+            }
+
+        }
+        return distancesMap;
+    }
+
     public Map<Float, String> extractNeighbours(Map<Float, String> distances) {
         Map<Float, String> kNeighbours = distances
                 .entrySet()

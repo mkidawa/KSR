@@ -11,6 +11,7 @@ import java.util.List;
 public class CustomFeatures {
     private List<Float> features;
     private String country;
+    private List<String> topics;
 
     public List<Float> getFeatures() {
         return features;
@@ -28,6 +29,13 @@ public class CustomFeatures {
         this.country = country;
     }
 
+    public List<String> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<String> topics) {
+        this.topics = topics;
+    }
 
     public CustomFeatures(Measure m, KeyWords kw, Article a, boolean[] filter) throws IOException {
         this.features = new ArrayList<>();
@@ -44,6 +52,7 @@ public class CustomFeatures {
 
         this.features = normalizeVector(this.features);
         this.country = a.getCountry();
+        this.topics = a.getTopic();
     }
 
     public List<Float> numberOfKeywords (Measure m, KeyWords kw, Article a) {

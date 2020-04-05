@@ -31,6 +31,10 @@ public class Estimation {
         this.recall = recall;
     }
 
+    public Estimation (List<String> predicted, List<List<String>> actual) {
+        this.accuracy = calculateAccuracyWhenTopics(predicted, actual);
+    }
+
     public Estimation (List<String> predicted, List<String> actual, List<String> labels) {
         this.accuracy = calculateAccuracy(predicted, actual);
         this.precision = calculatePrecision(predicted, actual, labels);
@@ -41,6 +45,16 @@ public class Estimation {
         int trues = 0;
         for(int i = 0; i < predicted.size(); i++) {
             if (predicted.get(i).equals(actual.get(i))) {
+                trues++;
+            }
+        }
+        return (float) trues / predicted.size();
+    }
+
+    public float calculateAccuracyWhenTopics (List<String> predicted, List<List<String>> actual) {
+        int trues = 0;
+        for(int i = 0; i < predicted.size(); i++) {
+            if (actual.get(i).contains(predicted.get(i))) {
                 trues++;
             }
         }
