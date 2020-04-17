@@ -88,4 +88,44 @@ public class Estimation {
         }
         return (float) truePositives / (truePositives + falseNegatives);
     }
+
+    public float[] calculatePrecisionForAll (List<String> predicted, List<String> actual, List<String> labels) {
+        float[] precisions = new float[labels.size()];
+
+        for (int j = 0; j < labels.size(); j++) {
+            int truePositive = 0;
+            int falsePositive = 0;
+            for (int i = 0; i < predicted.size(); i++) {
+                if (predicted.get(i).equals(labels.get(j))) {
+                    if (predicted.get(i).equals(actual.get(i))) {
+                        truePositive++;
+                    } else {
+                        falsePositive++;
+                    }
+                }
+            }
+            precisions[j] = (float) truePositive / (truePositive + falsePositive);
+        }
+
+        return precisions;
+    }
+
+    public float[] calculateRecallForAll (List<String> predicted, List<String> actual, List<String> labels) {
+        float[] recalls = new float[labels.size()];
+        for (int j = 0; j < labels.size(); j++) {
+            int truePositive = 0;
+            int falseNegative = 0;
+            for (int i = 0; i < predicted.size(); i++) {
+                if (actual.get(i).equals(labels.get(j))) {
+                    if (predicted.get(i).equals(actual.get(i))) {
+                        truePositive++;
+                    } else {
+                        falseNegative++;
+                    }
+                }
+            }
+            recalls[j] = (float) truePositive / (truePositive + falseNegative);
+        }
+        return recalls;
+    }
 }
