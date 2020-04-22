@@ -12,24 +12,25 @@ import org.awmk.ksr1.processing.StopWords;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
     private static int k = 7;
-    private static double trainingSet = 0.6;
+    private static double trainingSet = 0.75;
     private static boolean[] filter = new boolean[] {
+            false,
+            false,
             true,
+            false,
             true,
+            false,
             true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
+            false,
+            false,
     };
     private static Metric metric = new EuclideanMetric();
-    private static Measure measure = new GeneralizedNGram();
+    private static Measure measure = new GeneralizedNGramWithRestraints();
 
     public static void main(String[] args) throws IOException {
         ArticleParser parser = new ArticleParser();
@@ -74,8 +75,9 @@ public class Main {
 
         Estimation estimation = new Estimation(predicted, actual, labels);
         System.out.println(estimation.getAccuracy());
-        System.out.println(estimation.getPrecision());
-        System.out.println(estimation.getRecall());
+        System.out.println(Arrays.toString(estimation.calculatePrecisionForAll(predicted, actual, labels)));
+        System.out.println(Arrays.toString(estimation.calculateRecallForAll(predicted, actual, labels)));
+
 
     }
 }
