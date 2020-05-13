@@ -10,6 +10,4 @@ public class RunsModel {
     public List<RunDao> runs = new ArrayList<RunDao>();
 
     public void addRun(RunDao r) { runs.add(r); }
-
-
 }
