@@ -32,9 +32,9 @@ public class CustomFeatures {
     public CustomFeatures(Measure m, KeyWords kw, Article a, boolean[] filter) throws IOException {
         this.features = new ArrayList<>();
 
-        if (filter[0]) this.features.addAll(numberOfKeywords(m, kw, a));
-        if (filter[1]) this.features.addAll(numberOfKeywordsFirst10Percent(m, kw, a));
-        if (filter[2]) this.features.addAll(frequencyOfKeywords(m, kw, a));
+        if (filter[0]) this.features.addAll(similarityToKeywords(m, kw, a));
+        if (filter[1]) this.features.addAll(similarityToKeywordsInFirst10Percent(m, kw, a));
+        if (filter[2]) this.features.addAll(normalizedSimilarityToKeywords(m, kw, a));
         if (filter[3]) this.features.add(lengthOfWord(a));
         if (filter[4]) this.features.add((float) lengthOfArticle(a));
         if (filter[5]) this.features.add(frequencyOfShortWords(a));
@@ -46,7 +46,7 @@ public class CustomFeatures {
         this.country = a.getCountry();
     }
 
-    public List<Float> numberOfKeywords (Measure m, KeyWords kw, Article a) {
+    public List<Float> similarityToKeywords(Measure m, KeyWords kw, Article a) {
         List<Float> numsOfKeywords = new ArrayList<>();
         for (List<String> countryKeywords : kw.getKeywords()) {
             float numOfKeywords = 0;
@@ -63,7 +63,7 @@ public class CustomFeatures {
         return numsOfKeywords;
     }
 
-    public List<Float> numberOfKeywordsFirst10Percent (Measure m, KeyWords kw, Article a) {
+    public List<Float> similarityToKeywordsInFirst10Percent(Measure m, KeyWords kw, Article a) {
         List<Float> numsOfKeywords = new ArrayList<>();
         for (List<String> countryKeywords : kw.getKeywords()) {
             float numOfKeywords = 0;
@@ -80,7 +80,7 @@ public class CustomFeatures {
         return numsOfKeywords;
     }
 
-    public List<Float> frequencyOfKeywords (Measure m, KeyWords kw, Article a) {
+    public List<Float> normalizedSimilarityToKeywords(Measure m, KeyWords kw, Article a) {
         List<Float> freqOfKeywords = new ArrayList<>();
         for (List<String> countryKeywords : kw.getKeywords()) {
             float numOfKeywords = 0;
