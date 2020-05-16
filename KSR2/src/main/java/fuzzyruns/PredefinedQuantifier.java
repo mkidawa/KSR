@@ -5,7 +5,7 @@ import fuzzylogic.Quantifier;
 import fuzzylogic.TrapezoidalFunction;
 import fuzzylogic.TriangularFunction;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PredefinedQuantifier {
@@ -16,7 +16,7 @@ public class PredefinedQuantifier {
     }
 
     public PredefinedQuantifier() {
-        quantifiers = new LinkedList<>();
+        quantifiers = new ArrayList<>();
         quantifiers.add(almostNone);
         quantifiers.add(some);
         quantifiers.add(aboutHalf);

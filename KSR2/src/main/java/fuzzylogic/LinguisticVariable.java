@@ -1,11 +1,15 @@
 package fuzzylogic;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 public class LinguisticVariable<T> {
-    String name; // horse age
-    String label; // young
-    FuzzySet<T> set;
+    protected String name; // horse age
+    protected String label; // young
+    protected FuzzySet<T> set;
 
     public String getName() {
         return name;
@@ -43,5 +47,9 @@ public class LinguisticVariable<T> {
 
     public double getMembership(T obj) {
         return set.getMembership(obj);
+    }
+
+    public List<LinguisticVariable<T>> getAll() {
+        return new ArrayList<>(Collections.singletonList(this));
     }
 }

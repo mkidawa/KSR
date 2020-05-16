@@ -26,4 +26,26 @@ public class Measures<T> {
         } else return 0.0;
     }
 
+    public double degreeOfImprecision(LinguisticVariable<T> summarizer, List<T> objects) {
+        double product = 1.0;
+        List<LinguisticVariable<T>> all = summarizer.getAll();
+
+        for (LinguisticVariable<T> linguisticVariable : all) {
+            product *= linguisticVariable.getSet().degreeOfFuzziness(objects);
+        }
+
+        return 1 - Math.pow(product, 1.0 / all.size());
+    }
+
+    public double degreeOfCovering() {return 0;}
+    public double degreeOfAppropriateness() {return 0;}
+    public double lengthOfSummary() {return 0;}
+    public double degreeOfQuantifierImprecision() {return 0;}
+    public double degreeOfQuantifierCardinality() {return 0;}
+    public double degreeOfSummarizerCardinality() {return 0;}
+    public double degreeOfQualifierImprecision() {return 0;}
+    public double degreeOfQualifierCardinality() {return 0;}
+    public double lengthOfQualifier() {return 0;}
+
+
 }

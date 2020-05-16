@@ -5,7 +5,7 @@ import fuzzylogic.LinguisticVariable;
 import fuzzylogic.TrapezoidalFunction;
 import fuzzylogic.TriangularFunction;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -20,7 +20,7 @@ public class PredefinedSummarizer {
     private static Function<RunDao, Double> declaredWeightFunc = RunDao::getDeclaredWeight;
 
     public PredefinedSummarizer() {
-        summarizers = new LinkedList<>();
+        summarizers = new ArrayList<>();
         summarizers.add(ageYoung);
         summarizers.add(ageMiddleAged);
         summarizers.add(ageOld);
