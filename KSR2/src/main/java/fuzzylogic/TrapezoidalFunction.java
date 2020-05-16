@@ -1,0 +1,28 @@
+package fuzzylogic;
+
+public class TrapezoidalFunction implements MembershipFunction {
+    private double a;
+    private double b;
+    private double m;
+    private double n;
+
+    public TrapezoidalFunction(double a, double b, double m, double n) {
+        this.a = a;
+        this.b = b;
+        this.m = m;
+        this.n = n;
+    }
+
+    public double getMembership(double x) {
+        if (x <= a || x >= b) {
+            return 0.0;
+        } else if (x > a && x <= m) {
+            return (x - a) / (m - a);
+        } else if (x > m && x <= n) {
+            return 1.0;
+        } else if (x > n && x < b) {
+            return (b - x) / (b - n);
+        } else return 0.0;
+    }
+
+}
