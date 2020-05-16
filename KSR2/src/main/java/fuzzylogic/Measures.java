@@ -9,7 +9,6 @@ public class Measures<T> {
         for(T obj : objects) {
             r += summarizer.getMembership(obj);
         }
-        System.out.println(r);
 
         if(quantifier.isAbsolute()) {
             return quantifier.getSet().getMembershipFunction().getMembership(r);
@@ -17,4 +16,5 @@ public class Measures<T> {
             return quantifier.getSet().getMembershipFunction().getMembership(r / objects.size());
         }
     }
+
 }

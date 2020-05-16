@@ -1,5 +1,7 @@
 package fuzzylogic;
 
+import java.util.function.Function;
+
 public class LinguisticVariable<T> {
     String name; // horse age
     String label; // young
@@ -31,6 +33,12 @@ public class LinguisticVariable<T> {
         this.name = name;
         this.label = label;
         this.set = set;
+    }
+
+    public LinguisticVariable(String name, String label, MembershipFunction membershipFunction, Function<T, Double> function) {
+        this.name = name;
+        this.label = label;
+        this.set = new FuzzySet<T>(membershipFunction, function);
     }
 
     public double getMembership(T obj) {
