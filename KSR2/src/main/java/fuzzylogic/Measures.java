@@ -37,15 +37,92 @@ public class Measures<T> {
         return 1 - Math.pow(product, 1.0 / all.size());
     }
 
-    public double degreeOfCovering() {return 0;}
-    public double degreeOfAppropriateness() {return 0;}
-    public double lengthOfSummary() {return 0;}
-    public double degreeOfQuantifierImprecision() {return 0;}
-    public double degreeOfQuantifierCardinality() {return 0;}
-    public double degreeOfSummarizerCardinality() {return 0;}
-    public double degreeOfQualifierImprecision() {return 0;}
-    public double degreeOfQualifierCardinality() {return 0;}
-    public double lengthOfQualifier() {return 0;}
+    public double degreeOfCovering(LinguisticVariable<T> qualifier, LinguisticVariable<T> summarizer, List<T> objects) {
+        int t = 0;
+        int h = 0;
+
+        for (T obj : objects) {
+            if (qualifier.getMembership(obj) > 0) {
+                h++;
+                if (summarizer.getMembership(obj) > 0) {
+                    t++;
+                }
+            }
+        }
+
+        return (double) t / h;
+    }
+
+    public double degreeOfAppropriateness(LinguisticVariable<T> qualifier, LinguisticVariable<T> summarizer, List<T> objects) {
+        double product = 1.0;
+        List<LinguisticVariable<T>> all = summarizer.getAll();
+        double T3 = degreeOfCovering(qualifier, summarizer, objects);
+
+        for (LinguisticVariable<T> linguisticVariable : all) {
+            int r = 0;
+            for (T obj : objects) {
+                if (linguisticVariable.getMembership(obj) > 0) {
+                    r++;
+                }
+            }
+            product *= (double) r / objects.size();
+        }
+
+        return Math.abs(product - T3);
+    }
+
+    public double lengthOfSummary(LinguisticVariable<T> summarizer) {
+        return 2 * Math.pow(0.5, summarizer.getAll().size());
+    }
+
+    public double degreeOfQuantifierImprecision(Quantifier<T> quantifier, List<T> objects) {
+        double supp = quantifier.set.getMembershipFunction().support();
+
+        if (quantifier.isAbsolute()) {
+            supp /= objects.size();
+        }
+
+        return supp;
+    }
+
+    public double degreeOfQuantifierCardinality(Quantifier<T> quantifier, List<T> objects) {
+        double card = quantifier.set.getMembershipFunction().cardinality();
+
+        if (quantifier.isAbsolute()) {
+            card /= objects.size();
+        }
+
+        return 1.0 - card;
+    }
+
+    public double degreeOfSummarizerCardinality(LinguisticVariable<T> summarizer, List<T> objects) {
+        double product = 1.0;
+        List<LinguisticVariable<T>> all = summarizer.getAll();
+
+        for (LinguisticVariable<T> linguisticVariable : all) {
+            product *= linguisticVariable.set.getMembershipFunction().cardinality() / objects.size();
+        }
+
+        return 1 - Math.pow(product, 1 - all.size());
+    }
+
+    public double degreeOfQualifierImprecision(LinguisticVariable<T> qualifier, List<T> objects) {
+        return 1 - qualifier.set.degreeOfFuzziness(objects);
+    }
+
+    public double degreeOfQualifierCardinality(LinguisticVariable<T> qualifier, List<T> objects) {
+        double product = 1.0;
+        List<LinguisticVariable<T>> all = qualifier.getAll();
+
+        for (LinguisticVariable<T> linguisticVariable : all) {
+            product *= linguisticVariable.set.getMembershipFunction().cardinality() / objects.size();
+        }
+        return 1 - Math.pow(product, (double) 1 / all.size());
+    }
+
+    public double lengthOfQualifier(LinguisticVariable<T> qualifier) {
+        return 2 * Math.pow(0.5, qualifier.getAll().size());
+    }
 
 
 }

@@ -20,4 +20,14 @@ public class TriangularFunction implements MembershipFunction {
             return (b - x) / (b - m);
         } else return 0.0;
     }
+
+    @Override
+    public double cardinality() {
+        return 0.5 * (b - a);
+    }
+
+    @Override
+    public double support() {
+        return b - a;
+    }
 }
