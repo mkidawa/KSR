@@ -31,12 +31,26 @@ public class PredefinedSummarizer {
         summarizers.add(ageOld);
     }
 
+    public List<String> getAllSummarizerLabels() {
+        List<String> labels = new ArrayList<>();
+        labels.add(ageYoung.getName() + " " + ageYoung.getLabel());
+        labels.add(ageMiddleAged.getName() + " " + ageMiddleAged.getLabel());
+        labels.add(ageOld.getName() + " " + ageOld.getLabel());
+        labels.add(declaredWeightVeryLight.getName() + " " + declaredWeightVeryLight.getLabel() );
+        labels.add(declaredWeightLight.getName() + " " + declaredWeightLight.getLabel());
+        labels.add(declaredWeightMedium.getName() + " " + declaredWeightMedium.getLabel());
+        labels.add(declaredWeightHeavy.getName() + " " + declaredWeightHeavy.getLabel());
+        labels.add(declaredWeightVeryHeavy.getName() + " " + declaredWeightVeryHeavy.getLabel());
+        return labels;
+    };
+
     public static LinguisticVariable<RunDao> ageYoung = new LinguisticVariable<>(
             "horse age",
             "young",
             new TrapezoidalFunction(0.0, 4.5, 0.0, 3.5),
             ageFunc
     );
+
     public static LinguisticVariable<RunDao> ageMiddleAged = new LinguisticVariable<>(
             "horse age",
             "middle-aged",

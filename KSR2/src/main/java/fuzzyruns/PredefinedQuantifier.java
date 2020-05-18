@@ -3,7 +3,6 @@ package fuzzyruns;
 import dao.RunDao;
 import fuzzylogic.Quantifier;
 import fuzzylogic.TrapezoidalFunction;
-import fuzzylogic.TriangularFunction;
 
 import java.util.ArrayList;
 import java.util.List;

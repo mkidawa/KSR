@@ -1,9 +1,5 @@
 package fuzzylogic;
 
-import dao.RunDao;
-
-import java.util.function.Function;
-
 public class Quantifier<T> extends LinguisticVariable<T> {
     private boolean absolute;
 

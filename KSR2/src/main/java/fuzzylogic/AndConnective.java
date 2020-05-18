@@ -3,7 +3,7 @@ package fuzzylogic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AndConnective<T> extends LinguisticVariable<T> {
+public class  AndConnective<T> extends LinguisticVariable<T> {
     private LinguisticVariable<T> firstSummarizer;
     private LinguisticVariable<T> secondSummarizer;
     private List<LinguisticVariable<T>> summarizers;
