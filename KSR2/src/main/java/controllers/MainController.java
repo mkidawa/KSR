@@ -3,6 +3,7 @@ package controllers;
 import com.mongodb.client.MongoCollection;
 import dao.RunDao;
 import fuzzylogic.Quantifier;
+import fuzzylogic.Summary;
 import fuzzyruns.PredefinedSummarizer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -98,21 +99,22 @@ public class MainController {
 
         for(Quantifier<RunDao> quantifier : model.quantifier.getQuantifiers())
         {
-            double T1 = model.measures.degreeOfTruth(quantifier, model.qualifier, model.summarizers, model.runs);
-            double T2 = model.measures.degreeOfImprecision(model.summarizer2, model.runs);
-            double T3 = model.measures.degreeOfCovering(model.qualifier, model.summarizer2, model.runs);
-            double T4 = model.measures.degreeOfAppropriateness(model.qualifier, model.summarizer2, model.runs);
-            double T5 = model.measures.lengthOfSummary(model.summarizer2);
-            double T6 = model.measures.degreeOfQuantifierImprecision(quantifier, model.runs);
-            double T7 = model.measures.degreeOfQuantifierCardinality(quantifier, model.runs);
-            double T8 = model.measures.degreeOfSummarizerCardinality(model.summarizer2, model.runs);
-            double T9 = model.measures.degreeOfQualifierImprecision(model.qualifier, model.runs);
-            double T10 = model.measures.degreeOfQualifierCardinality(model.qualifier, model.runs);
-            double T11 = model.measures.lengthOfQualifier(model.qualifier);
+            Summary<RunDao> summary = new Summary<RunDao>(quantifier, model.qualifier, model.runs, model.summarizers);
+            double T1 = Math.round(model.measures.degreeOfTruth(summary) * 100d) / 100d;
+            double T2 = Math.round(model.measures.degreeOfImprecision(summary) * 100d) / 100d;
+            double T3 = Math.round(model.measures.degreeOfCovering(summary) * 100d) / 100d;
+            double T4 = Math.round(model.measures.degreeOfAppropriateness(summary) * 100d) / 100d;
+            double T5 = Math.round(model.measures.lengthOfSummary(summary) * 100d) / 100d;
+            double T6 = Math.round(model.measures.degreeOfQuantifierImprecision(summary) * 100d) / 100d;
+            double T7 = Math.round(model.measures.degreeOfQuantifierCardinality(summary) * 100d) / 100d;
+            double T8 = Math.round(model.measures.degreeOfSummarizerCardinality(summary) * 100d) / 100d;
+            double T9 = Math.round(model.measures.degreeOfQualifierImprecision(summary) * 100d) / 100d;
+            double T10 = Math.round(model.measures.degreeOfQualifierCardinality(summary) * 100d) / 100d;
+            double T11 = Math.round(model.measures.lengthOfQualifier(summary) * 100d) / 100d;
 
             //text += quantifier.getLinguisticVariableName() + " of horses being " + model.qualifier.getLinguisticVariableName() + " of: " + model.qualifier.getLabelName() + " were of " + model.summarizer2.getLinguisticVariableName() + ": " + model.summarizer2.getLabelName() + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
             // System.out.println(quantifier.getName() + " of horses being " + model.qualifier.getName() + " of: " + model.qualifier.getLabel() + " were of " + model.summarizer2.getName() + ": " + model.summarizer2.getLabel() + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]");
-            text += quantifier.getLinguisticVariableName() + " of horses were of " + model.summarizers.get(0).getLinguisticVariableName() + ": " + model.summarizers.get(0).getLabelName() + " and of " + model.summarizers.get(1).getLinguisticVariableName() + ": " + model.summarizers.get(1).getLabelName() + " [T1 = " + T1 + "]";
+            text += quantifier.getLinguisticVariableName() + " of horses were of " + model.summarizers.get(0).getLinguisticVariableName() + ": " + model.summarizers.get(0).getLabelName() + " and of " + model.summarizers.get(1).getLinguisticVariableName() + ": " + model.summarizers.get(1).getLabelName() + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
             // System.out.println(quantifier.getName() + " of horses were of " + model.summarizer1.getName() + ": " + model.summarizer1.getLabel() + " or of " + model.summarizer2.getName() + ": " + model.summarizer2.getLabel() + " [" + model.measures.degreeOfTruth(quantifier, null, model.and, model.runs) + "]");
             // System.out.println(quantifier.getName() + " of horses were of " + model.summarizer1.getName() + ": " + model.summarizer1.getLabel() + " [" + model.measures.degreeOfTruth(quantifier, null , model.summarizer1, model.runs) + "]");
         }
