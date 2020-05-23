@@ -1,6 +1,6 @@
 package fuzzylogic;
 
-public class Quantifier<T> extends LinguisticVariable<T> {
+public class Quantifier<T> extends Label<T> {
     private boolean absolute;
 
     public boolean isAbsolute() {
@@ -12,7 +12,7 @@ public class Quantifier<T> extends LinguisticVariable<T> {
     }
 
     public Quantifier(String name, MembershipFunction membershipFunction, boolean absolute) {
-        this.name = name;
+        this.linguisticVariableName = name;
         this.set = new FuzzySet<T>(membershipFunction);
         this.absolute = absolute;
     }

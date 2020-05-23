@@ -3,28 +3,28 @@ package fuzzylogic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class  AndConnective<T> extends LinguisticVariable<T> {
-    private LinguisticVariable<T> firstSummarizer;
-    private LinguisticVariable<T> secondSummarizer;
-    private List<LinguisticVariable<T>> summarizers;
+public class AndConnective<T> extends Label<T> {
+    private Label<T> firstSummarizer;
+    private Label<T> secondSummarizer;
+    private List<Label<T>> summarizers;
 
-    public List<LinguisticVariable<T>> getSummarizers() {
+    public List<Label<T>> getSummarizers() {
         return summarizers;
     }
 
-    public AndConnective(LinguisticVariable<T> firstSummarizer, LinguisticVariable<T> secondSummarizer) {
+    public AndConnective(Label<T> firstSummarizer, Label<T> secondSummarizer) {
         this.firstSummarizer = firstSummarizer;
         this.secondSummarizer = secondSummarizer;
     }
 
-    public AndConnective(List<LinguisticVariable<T>> summarizers) {
+    public AndConnective(List<Label<T>> summarizers) {
         this.summarizers = summarizers;
     }
 
     @Override
     public double getMembership(T obj) {
         double min = 1.0;
-        for (LinguisticVariable<T> summarizer : summarizers) {
+        for (Label<T> summarizer : summarizers) {
             double membership = summarizer.getMembership(obj);
             if (membership < min) {
                 min = membership;
@@ -35,8 +35,8 @@ public class  AndConnective<T> extends LinguisticVariable<T> {
     }
 
     @Override
-    public List<LinguisticVariable<T>> getAll() {
-        List<LinguisticVariable<T>> allVariables = new ArrayList<>();
+    public List<Label<T>> getAll() {
+        List<Label<T>> allVariables = new ArrayList<>();
         allVariables.add(firstSummarizer);
         allVariables.add(secondSummarizer);
         return allVariables;

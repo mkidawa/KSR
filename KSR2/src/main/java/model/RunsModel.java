@@ -2,10 +2,8 @@ package model;
 
 import com.mongodb.client.MongoCollection;
 import dao.RunDao;
-import fuzzylogic.LinguisticVariable;
+import fuzzylogic.Label;
 import fuzzylogic.Measures;
-import fuzzylogic.OrConnective;
-import fuzzylogic.Quantifier;
 import fuzzyruns.PredefinedQuantifier;
 import fuzzyruns.PredefinedSummarizer;
 
@@ -21,10 +19,10 @@ public class RunsModel {
     public Measures<RunDao> measures = new Measures<>();
     public PredefinedSummarizer summarizer = new PredefinedSummarizer();
     public PredefinedQuantifier quantifier = new PredefinedQuantifier();
-    public LinguisticVariable<RunDao> summarizer1 = PredefinedSummarizer.ageYoung;
-    public LinguisticVariable<RunDao> summarizer2 = PredefinedSummarizer.declaredWeightLight;
-    public LinguisticVariable<RunDao> and = new OrConnective<>(summarizer1, summarizer2);
-    public LinguisticVariable<RunDao> qualifier = PredefinedSummarizer.ageYoung;
+    public Label<RunDao> summarizer1 = PredefinedSummarizer.ageYoung;
+    public Label<RunDao> summarizer2 = PredefinedSummarizer.declaredWeightMedium;
+    public List<Label<RunDao>> summarizers = new ArrayList<>();
+    public Label<RunDao> qualifier = PredefinedSummarizer.ageYoung;
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
         this.dataCollection = dataCollection;

@@ -3,18 +3,26 @@ package fuzzylogic;
 import java.util.List;
 
 public class Measures<T> {
-    public double degreeOfTruth(Quantifier<T> quantifier, LinguisticVariable<T> qualifier, LinguisticVariable<T> summarizer, List<T> objects) {
+    public double degreeOfTruth(Quantifier<T> quantifier, Label<T> qualifier, List<Label<T>> summarizers, List<T> objects) {
         double r = 0;
         double m = 0;
 
         if (qualifier == null) { // summary without qualifier
             for (T obj : objects) {
-                r += summarizer.getMembership(obj);
+                if (summarizers.size() == 1) {
+                    r += summarizers.get(0).getMembership(obj);
+                } else if (summarizers.size() > 1) {
+                    r += Label.<T>andConnective(summarizers, obj);
+                }
             }
             m = objects.size();
         } else {
             for (T obj : objects) {
-                r += Math.min(summarizer.getMembership(obj), qualifier.getMembership(obj));
+                if (summarizers.size() == 1) {
+                    r += Math.min(summarizers.get(0).getMembership(obj), qualifier.getMembership(obj));
+                } else if (summarizers.size() > 1) {
+                    r += Math.min(Label.<T>andConnective(summarizers, obj), qualifier.getMembership(obj));
+                }
                 m += qualifier.getMembership(obj);
             }
         }
@@ -26,18 +34,18 @@ public class Measures<T> {
         } else return 0.0;
     }
 
-    public double degreeOfImprecision(LinguisticVariable<T> summarizer, List<T> objects) {
+    public double degreeOfImprecision(Label<T> summarizer, List<T> objects) {
         double product = 1.0;
-        List<LinguisticVariable<T>> all = summarizer.getAll();
+        List<Label<T>> all = summarizer.getAll();
 
-        for (LinguisticVariable<T> linguisticVariable : all) {
+        for (Label<T> linguisticVariable : all) {
             product *= linguisticVariable.getSet().degreeOfFuzziness(objects);
         }
 
         return 1 - Math.pow(product, 1.0 / all.size());
     }
 
-    public double degreeOfCovering(LinguisticVariable<T> qualifier, LinguisticVariable<T> summarizer, List<T> objects) {
+    public double degreeOfCovering(Label<T> qualifier, Label<T> summarizer, List<T> objects) {
         int t = 0;
         int h = 0;
 
@@ -53,12 +61,12 @@ public class Measures<T> {
         return (double) t / h;
     }
 
-    public double degreeOfAppropriateness(LinguisticVariable<T> qualifier, LinguisticVariable<T> summarizer, List<T> objects) {
+    public double degreeOfAppropriateness(Label<T> qualifier, Label<T> summarizer, List<T> objects) {
         double product = 1.0;
-        List<LinguisticVariable<T>> all = summarizer.getAll();
+        List<Label<T>> all = summarizer.getAll();
         double T3 = degreeOfCovering(qualifier, summarizer, objects);
 
-        for (LinguisticVariable<T> linguisticVariable : all) {
+        for (Label<T> linguisticVariable : all) {
             int r = 0;
             for (T obj : objects) {
                 if (linguisticVariable.getMembership(obj) > 0) {
@@ -71,7 +79,7 @@ public class Measures<T> {
         return Math.abs(product - T3);
     }
 
-    public double lengthOfSummary(LinguisticVariable<T> summarizer) {
+    public double lengthOfSummary(Label<T> summarizer) {
         return 2 * Math.pow(0.5, summarizer.getAll().size());
     }
 
@@ -95,32 +103,32 @@ public class Measures<T> {
         return 1.0 - card;
     }
 
-    public double degreeOfSummarizerCardinality(LinguisticVariable<T> summarizer, List<T> objects) {
+    public double degreeOfSummarizerCardinality(Label<T> summarizer, List<T> objects) {
         double product = 1.0;
-        List<LinguisticVariable<T>> all = summarizer.getAll();
+        List<Label<T>> all = summarizer.getAll();
 
-        for (LinguisticVariable<T> linguisticVariable : all) {
+        for (Label<T> linguisticVariable : all) {
             product *= linguisticVariable.set.getMembershipFunction().cardinality() / objects.size();
         }
 
         return 1 - Math.pow(product, 1 - all.size());
     }
 
-    public double degreeOfQualifierImprecision(LinguisticVariable<T> qualifier, List<T> objects) {
+    public double degreeOfQualifierImprecision(Label<T> qualifier, List<T> objects) {
         return 1 - qualifier.set.degreeOfFuzziness(objects);
     }
 
-    public double degreeOfQualifierCardinality(LinguisticVariable<T> qualifier, List<T> objects) {
+    public double degreeOfQualifierCardinality(Label<T> qualifier, List<T> objects) {
         double product = 1.0;
-        List<LinguisticVariable<T>> all = qualifier.getAll();
+        List<Label<T>> all = qualifier.getAll();
 
-        for (LinguisticVariable<T> linguisticVariable : all) {
+        for (Label<T> linguisticVariable : all) {
             product *= linguisticVariable.set.getMembershipFunction().cardinality() / objects.size();
         }
         return 1 - Math.pow(product, (double) 1 / all.size());
     }
 
-    public double lengthOfQualifier(LinguisticVariable<T> qualifier) {
+    public double lengthOfQualifier(Label<T> qualifier) {
         return 2 * Math.pow(0.5, qualifier.getAll().size());
     }
 
