@@ -3,6 +3,7 @@ package controllers;
 import com.mongodb.client.MongoCollection;
 import dao.RunDao;
 import fuzzylogic.Quantifier;
+import fuzzyruns.PredefinedSummarizer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -89,8 +90,12 @@ public class MainController {
     @FXML
     public void onClickGenerateResult() {
         String text = new String();
+        model.summarizerGlobal = new PredefinedSummarizer(model.runs);
+        model.summarizer1 = model.summarizerGlobal.ageYoung;
+        model.qualifier = model.summarizerGlobal.ageYoung;
         model.summarizers.add(model.summarizer1);
         model.summarizers.add(model.summarizer2);
+
         for(Quantifier<RunDao> quantifier : model.quantifier.getQuantifiers())
         {
             double T1 = model.measures.degreeOfTruth(quantifier, model.qualifier, model.summarizers, model.runs);

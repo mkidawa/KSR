@@ -1,7 +1,19 @@
 package fuzzylogic;
 
-import java.util.HashSet;
+import java.util.List;
 
 public class CrispSet<T> {
-    private HashSet<T> set;
+    private List<T> set;
+
+    public CrispSet(List<T> set) {
+        this.set = set;
+    }
+
+    public List<T> getSet() {
+        return set;
+    }
+
+    public void setSet(List<T> set) {
+        this.set = set;
+    }
 }

@@ -2,6 +2,7 @@ package fuzzyruns;
 
 import dao.RunDao;
 import fuzzylogic.Label;
+import fuzzylogic.LinguisticVariable;
 import fuzzylogic.TrapezoidalFunction;
 import fuzzylogic.TriangularFunction;
 
@@ -12,9 +13,17 @@ import java.util.function.Function;
 public class PredefinedSummarizer {
     private List<Label<RunDao>> summarizers;
 
+    public List<RunDao> getObjects() {
+        return objects;
+    }
+
+    private List<RunDao> objects;
+
     public List<Label<RunDao>> getSummarizers() {
         return summarizers;
     }
+
+    private LinguisticVariable<RunDao> age = new LinguisticVariable<RunDao>("horse age", objects, ageFunc);
 
     private static Function<RunDao, Double> ageFunc = run -> (double) run.getHorseAge();
     private static Function<RunDao, Double> declaredWeightFunc = RunDao::getDeclaredWeight;
@@ -31,6 +40,10 @@ public class PredefinedSummarizer {
         summarizers.add(ageOld);
     }
 
+    public PredefinedSummarizer(List<RunDao> objects) {
+        this.objects = objects;
+    }
+
     public List<String> getAllSummarizerLabels() {
         List<String> labels = new ArrayList<>();
         labels.add(ageYoung.getLinguisticVariableName() + " " + ageYoung.getLabelName());
@@ -44,12 +57,14 @@ public class PredefinedSummarizer {
         return labels;
     };
 
-    public static Label<RunDao> ageYoung = new Label<>(
-            "horse age",
-            "young",
-            new TrapezoidalFunction(0.0, 4.5, 0.0, 3.5),
-            ageFunc
-    );
+//    public static Label<RunDao> ageYoung = new Label<>(
+//            "horse age",
+//            "young",
+//            new TrapezoidalFunction(0.0, 4.5, 0.0, 3.5),
+//            ageFunc
+//    );
+
+    public Label<RunDao> ageYoung = new Label<>(age, new TrapezoidalFunction(0.0, 4.5, 0.0, 3.5), "young");
 
     public static Label<RunDao> ageMiddleAged = new Label<>(
             "horse age",

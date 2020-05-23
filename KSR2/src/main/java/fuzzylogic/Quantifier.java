@@ -13,7 +13,7 @@ public class Quantifier<T> extends Label<T> {
 
     public Quantifier(String name, MembershipFunction membershipFunction, boolean absolute) {
         this.linguisticVariableName = name;
-        this.set = new FuzzySet<T>(membershipFunction);
+        this.fuzzySet = new FuzzySet<T>(membershipFunction);
         this.absolute = absolute;
     }
 

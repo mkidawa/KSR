@@ -28,9 +28,9 @@ public class Measures<T> {
         }
 
         if (quantifier.isAbsolute() && qualifier == null) {
-            return quantifier.getSet().getMembershipFunction().getMembership(r);
+            return quantifier.getFuzzySet().getMembershipFunction().getMembership(r);
         } else if (!quantifier.isAbsolute()) {
-            return quantifier.getSet().getMembershipFunction().getMembership(r / m);
+            return quantifier.getFuzzySet().getMembershipFunction().getMembership(r / m);
         } else return 0.0;
     }
 
@@ -39,7 +39,7 @@ public class Measures<T> {
         List<Label<T>> all = summarizer.getAll();
 
         for (Label<T> linguisticVariable : all) {
-            product *= linguisticVariable.getSet().degreeOfFuzziness(objects);
+            product *= linguisticVariable.getFuzzySet().degreeOfFuzziness(objects);
         }
 
         return 1 - Math.pow(product, 1.0 / all.size());
@@ -84,7 +84,7 @@ public class Measures<T> {
     }
 
     public double degreeOfQuantifierImprecision(Quantifier<T> quantifier, List<T> objects) {
-        double supp = quantifier.set.getMembershipFunction().support();
+        double supp = quantifier.fuzzySet.getMembershipFunction().support();
 
         if (quantifier.isAbsolute()) {
             supp /= objects.size();
@@ -94,7 +94,7 @@ public class Measures<T> {
     }
 
     public double degreeOfQuantifierCardinality(Quantifier<T> quantifier, List<T> objects) {
-        double card = quantifier.set.getMembershipFunction().cardinality();
+        double card = quantifier.fuzzySet.getMembershipFunction().cardinality();
 
         if (quantifier.isAbsolute()) {
             card /= objects.size();
@@ -108,14 +108,14 @@ public class Measures<T> {
         List<Label<T>> all = summarizer.getAll();
 
         for (Label<T> linguisticVariable : all) {
-            product *= linguisticVariable.set.getMembershipFunction().cardinality() / objects.size();
+            product *= linguisticVariable.fuzzySet.getMembershipFunction().cardinality() / objects.size();
         }
 
         return 1 - Math.pow(product, 1 - all.size());
     }
 
     public double degreeOfQualifierImprecision(Label<T> qualifier, List<T> objects) {
-        return 1 - qualifier.set.degreeOfFuzziness(objects);
+        return 1 - qualifier.fuzzySet.degreeOfFuzziness(objects);
     }
 
     public double degreeOfQualifierCardinality(Label<T> qualifier, List<T> objects) {
@@ -123,7 +123,7 @@ public class Measures<T> {
         List<Label<T>> all = qualifier.getAll();
 
         for (Label<T> linguisticVariable : all) {
-            product *= linguisticVariable.set.getMembershipFunction().cardinality() / objects.size();
+            product *= linguisticVariable.fuzzySet.getMembershipFunction().cardinality() / objects.size();
         }
         return 1 - Math.pow(product, (double) 1 / all.size());
     }

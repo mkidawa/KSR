@@ -17,12 +17,16 @@ public class RunsModel {
     private MongoCollection<RunDao> dataCollection;
 
     public Measures<RunDao> measures = new Measures<>();
-    public PredefinedSummarizer summarizer = new PredefinedSummarizer();
+    public PredefinedSummarizer summarizer = new PredefinedSummarizer(runs);
+    public PredefinedSummarizer summarizerGlobal;
     public PredefinedQuantifier quantifier = new PredefinedQuantifier();
-    public Label<RunDao> summarizer1 = PredefinedSummarizer.ageYoung;
+    //public Label<RunDao> summarizer1 = PredefinedSummarizer.ageYoung;
+    //public Label<RunDao> summarizer1 = summarizer.ageYoung;
+    public Label<RunDao> summarizer1;
     public Label<RunDao> summarizer2 = PredefinedSummarizer.declaredWeightMedium;
     public List<Label<RunDao>> summarizers = new ArrayList<>();
-    public Label<RunDao> qualifier = PredefinedSummarizer.ageYoung;
+    //public Label<RunDao> qualifier = summarizer.ageYoung;
+    public Label<RunDao> qualifier;
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
         this.dataCollection = dataCollection;

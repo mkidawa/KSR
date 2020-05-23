@@ -8,7 +8,7 @@ import java.util.function.Function;
 public class Label<T> {
     protected String linguisticVariableName; // horse age
     protected String labelName; // young
-    protected FuzzySet<T> set;
+    protected FuzzySet<T> fuzzySet;
 
     public String getLinguisticVariableName() {
         return linguisticVariableName;
@@ -26,26 +26,38 @@ public class Label<T> {
         this.labelName = labelName;
     }
 
-    public FuzzySet<T> getSet() {
-        return set;
+    public FuzzySet<T> getFuzzySet() {
+        return fuzzySet;
     }
 
     public Label() {}
 
-    public Label(String linguisticVariableName, String labelName, FuzzySet<T> set) {
+    public Label(String linguisticVariableName, String labelName, FuzzySet<T> fuzzySet) {
         this.linguisticVariableName = linguisticVariableName;
         this.labelName = labelName;
-        this.set = set;
+        this.fuzzySet = fuzzySet;
     }
 
     public Label(String linguisticVariableName, String labelName, MembershipFunction membershipFunction, Function<T, Double> function) {
         this.linguisticVariableName = linguisticVariableName;
         this.labelName = labelName;
-        this.set = new FuzzySet<T>(membershipFunction, function);
+        this.fuzzySet = new FuzzySet<T>(membershipFunction, function);
+    }
+
+    public Label(List<T> objects, String linguisticVariableName, String labelName, MembershipFunction membershipFunction, Function<T, Double> function) {
+        this.linguisticVariableName = linguisticVariableName;
+        this.labelName = labelName;
+        this.fuzzySet = new FuzzySet<T>(objects, membershipFunction, function);
+    }
+
+    public Label (LinguisticVariable<T> linguisticVariable, MembershipFunction membershipFunction, String labelName) {
+        this.labelName = labelName;
+        this.linguisticVariableName = linguisticVariable.getName();
+        this.fuzzySet = new FuzzySet<>(linguisticVariable.getUniverse(), membershipFunction, linguisticVariable.getFunction());
     }
 
     public double getMembership(T obj) {
-        return set.getMembership(obj);
+        return fuzzySet.getMembership(obj);
     }
 
     public List<Label<T>> getAll() {
