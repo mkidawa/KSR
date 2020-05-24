@@ -7,13 +7,11 @@ import fuzzylogic.Summary;
 import fuzzyruns.PredefinedSummarizer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import model.RunsModel;
@@ -24,8 +22,8 @@ import java.util.List;
 public class MainController {
     private RunsModel model = new RunsModel();
     private List<ComboBox> comboBoxes;
-    private int nrOfStartingComboBoxes = 2;
-    private int nrOfCurrentComboBoxes = 2;
+    private int nrOfStartingComboBoxes = 1;
+    private int nrOfCurrentComboBoxes = 1;
     private static final int COMBO_BOXES_LIMIT = 5;
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
@@ -39,6 +37,19 @@ public class MainController {
         int id = 0;
         model.summarizerGlobal = new PredefinedSummarizer(model.runs);
         //model.qualifier = model.summarizerGlobal.ageYoung;
+        setComboBoxProperty(qualifier, 32,156);
+        qualifier.getItems().addAll(model.summarizer.getAllSummarizerLabels());
+        qualifier.setValue(model.summarizer.getAllSummarizerLabels().get(0));
+        qualifier.setEditable(true);
+        qualifier.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String value) {
+                try {
+                    model.setQualifierType(value);
+                } catch (IllegalAccessException | NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         for (ComboBox iterator : comboBoxes) {
             iterator.getItems().addAll(model.summarizer.getAllSummarizerLabels());
@@ -63,6 +74,7 @@ public class MainController {
             model.summarizers.add(new fuzzylogic.Label<RunDao>());
             pane.getChildren().add(comboBoxes.get(i));
         }
+        pane.getChildren().add(qualifier);
 
     }
     @FXML
@@ -90,17 +102,13 @@ public class MainController {
     private ComboBox combo5 = new ComboBox();
 
     @FXML
+    private ComboBox qualifier = new ComboBox();
+
+    @FXML
     private Pane pane;
 
     public MainController() {
     }
-
-//    private class MyButtonHandler implements EventHandler<ActionEvent> {
-//        @Override
-//        public void handle(ActionEvent evt) {
-//            System.out.println(evt.getSource());
-//        }
-//    }
 
     void setComboBoxProperty(ComboBox box, double x) {
        box.setLayoutX(x);
@@ -108,14 +116,20 @@ public class MainController {
        box.setPrefWidth(200.0);
     }
 
+    void setComboBoxProperty(ComboBox box, double x, double y) {
+        box.setLayoutX(x);
+        box.setLayoutY(y);
+        box.setPrefWidth(200.0);
+    }
+
     @FXML
     void initialize() {
         comboBoxes = new ArrayList<>();
         setComboBoxProperty(combo1, 32);
-        setComboBoxProperty(combo2, 242);
-        setComboBoxProperty(combo3, 452);
-        setComboBoxProperty(combo4, 662);
-        setComboBoxProperty(combo5, 872);
+        setComboBoxProperty(combo2, 292);
+        setComboBoxProperty(combo3, 552);
+        setComboBoxProperty(combo4, 812);
+        setComboBoxProperty(combo5, 1072);
         comboBoxes.add(combo1);
         comboBoxes.add(combo2);
         comboBoxes.add(combo3);
@@ -158,6 +172,14 @@ public class MainController {
     public void onClickAddNewCombo() {
         if (nrOfCurrentComboBoxes < COMBO_BOXES_LIMIT) {
             pane.getChildren().add(comboBoxes.get(nrOfCurrentComboBoxes));
+            Label connective = new Label("and");
+            double comboBoxX = comboBoxes.get(nrOfCurrentComboBoxes - 1).getLayoutX();
+            double comboBoxWidth = comboBoxes.get(nrOfCurrentComboBoxes - 1).getPrefWidth();
+            connective.setLayoutX(comboBoxX + comboBoxWidth + 10);
+            connective.setPrefWidth(40);
+            connective.setLayoutY(68);
+            connective.setAlignment(Pos.CENTER);
+            pane.getChildren().add(connective);
             model.summarizers.add(new fuzzylogic.Label<RunDao>());
             nrOfCurrentComboBoxes++;
         }

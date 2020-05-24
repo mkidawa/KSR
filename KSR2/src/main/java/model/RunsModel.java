@@ -35,4 +35,9 @@ public class RunsModel {
         summarizers.set(id, label);
     }
 
+    public void setQualifierType(String type) throws NoSuchFieldException, IllegalAccessException {
+        Label<RunDao> label = (Label<RunDao>) summarizerGlobal.getClass().getField(type).get(summarizerGlobal);
+        qualifier = label;
+    }
+
 }
