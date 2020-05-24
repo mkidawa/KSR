@@ -26,6 +26,7 @@ public class MainController {
     private int nrOfStartingComboBoxes = 1;
     private int nrOfCurrentComboBoxes = 1;
     private static final int COMBO_BOXES_LIMIT = 5;
+    private String generatedSummary = new String();
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
         model.setDataCollection(dataCollection);
@@ -111,6 +112,14 @@ public class MainController {
     public MainController() {
     }
 
+    public String getGeneratedSummary() {
+        return generatedSummary;
+    }
+
+    public void setGeneratedSummary(String generatedSummary) {
+        this.generatedSummary = generatedSummary;
+    }
+
     void setComboBoxProperty(ComboBox box, double x) {
        box.setLayoutX(x);
        box.setLayoutY(66);
@@ -157,14 +166,17 @@ public class MainController {
             double T10 = Math.round(model.measures.degreeOfQualifierCardinality(summary) * 100d) / 100d;
             double T11 = Math.round(model.measures.lengthOfQualifier(summary) * 100d) / 100d;
 
-            for (int i = 0; i < nrOfCurrentComboBoxes; i++){
-                text += quantifier.getLinguisticVariableName() + " " + model.summarizers.get(i).getLinguisticVariableName() + ": " + model.summarizers.get(i).getLabelName();
+            text += quantifier.getLinguisticVariableName() + " of runs ";
+            if(model.qualifier != null) {
+                text +=" having / being " + model.qualifier.getLinguisticVariableName() + " " + model.qualifier.getLabelName();
             }
-            //text += quantifier.getLinguisticVariableName() + " of horses being " + model.qualifier.getLinguisticVariableName() + " of: " + model.qualifier.getLabelName() + " were of " + model.summarizer2.getLinguisticVariableName() + ": " + model.summarizer2.getLabelName() + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
-            // System.out.println(quantifier.getName() + " of horses being " + model.qualifier.getName() + " of: " + model.qualifier.getLabel() + " were of " + model.summarizer2.getName() + ": " + model.summarizer2.getLabel() + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]");
-            text += " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
-            // System.out.println(quantifier.getName() + " of horses were of " + model.summarizer1.getName() + ": " + model.summarizer1.getLabel() + " or of " + model.summarizer2.getName() + ": " + model.summarizer2.getLabel() + " [" + model.measures.degreeOfTruth(quantifier, null, model.and, model.runs) + "]");
-            // System.out.println(quantifier.getName() + " of horses were of " + model.summarizer1.getName() + ": " + model.summarizer1.getLabel() + " [" + model.measures.degreeOfTruth(quantifier, null , model.summarizer1, model.runs) + "]");
+
+            for (int i = 0; i < nrOfCurrentComboBoxes; i++){
+                String connective = i > 0 ? " and " : " were with ";
+                text +=  connective + model.summarizers.get(i).getLinguisticVariableName() + " " + model.summarizers.get(i).getLabelName();
+            }
+
+            text += "\n [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
         }
         result.setText(text);
     }

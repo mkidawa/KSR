@@ -127,6 +127,4 @@ public class PredefinedSummarizer {
     public Label<RunDao> lengthsBehindInSectionClose = new Label<>(lengthsBehindInSection, new TrapezoidalFunction(0.15, 3.5, 0.15, 2.5), "close behind");
     public Label<RunDao> lengthsBehindInSectionMedium = new Label<>(lengthsBehindInSection, new TriangularFunction(2.5, 8.25, 4.75), "medium distance behind");
     public Label<RunDao> lengthsBehindInSectionFarBehind = new Label<>(lengthsBehindInSection, new TrapezoidalFunction(6.95, 9.75, 8.25, 9.75), "far behind");
-
-
 }

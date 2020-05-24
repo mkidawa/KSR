@@ -4,15 +4,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800" prefWidth="1380" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900" prefWidth="1380" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
     <children>
-        <Button fx:id="generate" contentDisplay="CENTER" layoutX="518.0" layoutY="741.0" mnemonicParsing="false" onAction="#onClickGenerateResult" prefHeight="45.0" prefWidth="165.0" text="Generate result" />
-        <Button fx:id="comboGenerator" contentDisplay="CENTER" layoutX="700.0" layoutY="741.0" mnemonicParsing="false" onAction="#onClickAddNewCombo" prefHeight="45.0" prefWidth="165.0" text="Add a new box" />
+        <Button fx:id="generate" contentDisplay="CENTER" layoutX="518.0" layoutY="828.0" mnemonicParsing="false" onAction="#onClickGenerateResult" prefHeight="45.0" prefWidth="165.0" text="Generate result" />
+        <Button fx:id="comboGenerator" contentDisplay="CENTER" layoutX="697.0" layoutY="828.0" mnemonicParsing="false" onAction="#onClickAddNewCombo" prefHeight="45.0" prefWidth="165.0" text="Add a new box" />
       <Label layoutX="32.0" layoutY="192.0" prefHeight="17.0" prefWidth="165.0" text="Result:">
          <font>
             <Font name="System Bold" size="20.0" />
          </font></Label>
-      <Label fx:id="result" alignment="TOP_LEFT" layoutX="33.0" layoutY="219.0" prefHeight="521.0" prefWidth="1136.0" wrapText="true">
+      <Label fx:id="result" alignment="TOP_LEFT" layoutX="33.0" layoutY="219.0" prefHeight="600.0" prefWidth="1302.0" wrapText="true">
          <font>
             <Font size="16.0" />
          </font></Label>
@@ -25,6 +25,6 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="comboGenerator1" contentDisplay="CENTER" layoutX="874.0" layoutY="741.0" mnemonicParsing="false" onAction="#onClickRemoveLastCombo" prefHeight="45.0" prefWidth="165.0" text="Remove box" />
+      <Button fx:id="comboGenerator1" contentDisplay="CENTER" layoutX="874.0" layoutY="828.0" mnemonicParsing="false" onAction="#onClickRemoveLastCombo" prefHeight="45.0" prefWidth="165.0" text="Remove box" />
     </children>
 </Pane>
