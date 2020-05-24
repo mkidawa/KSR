@@ -6,7 +6,6 @@ import fuzzylogic.Label;
 import fuzzylogic.Measures;
 import fuzzyruns.PredefinedQuantifier;
 import fuzzyruns.PredefinedSummarizer;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
