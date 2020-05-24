@@ -68,6 +68,9 @@ public class MainController {
             iterator.setId(String.valueOf(id));
             iterator.valueProperty().addListener(new ChangeListener<String>() {
                 @Override public void changed(ObservableValue ov, String t, String value) {
+                    if (!generate.isVisible()) {
+                        generate.setVisible(true);
+                    }
                     int comboBoxId = Integer.parseInt(iterator.getId());
                     try {
                         model.setSummarizerType(comboBoxId, value);
@@ -85,7 +88,10 @@ public class MainController {
             pane.getChildren().add(comboBoxes.get(i));
         }
         pane.getChildren().add(qualifier);
+
     }
+    @FXML
+    private Button generate = new Button();
 
     @FXML
     private Button fileGenerator = new Button();
@@ -151,6 +157,7 @@ public class MainController {
         comboBoxes.add(combo4);
         comboBoxes.add(combo5);
         fileGenerator.setVisible(false);
+        generate.setVisible(false);
     }
 
     @FXML
