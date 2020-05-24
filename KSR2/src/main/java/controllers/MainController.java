@@ -52,7 +52,9 @@ public class MainController {
         qualifier.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String value) {
                 try {
-                    model.setQualifierType(value);
+                    if (value != null) {
+                        model.setQualifierType(value);
+                    }
                 } catch (IllegalAccessException | NoSuchFieldException e) {
                     e.printStackTrace();
                 }
@@ -83,13 +85,7 @@ public class MainController {
             pane.getChildren().add(comboBoxes.get(i));
         }
         pane.getChildren().add(qualifier);
-
     }
-    @FXML
-    private Button generate;
-
-    @FXML
-    private Button comboGenerator;
 
     @FXML
     private Button fileGenerator = new Button();
@@ -232,5 +228,11 @@ public class MainController {
         String text = getGeneratedSummary();
         out.println(text);
         out.close();
+    }
+
+    @FXML
+    public void onClickClearQualifier() {
+        qualifier.valueProperty().set(null);
+        model.qualifier = null;
     }
 }
