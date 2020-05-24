@@ -20,7 +20,7 @@ public class App extends Application {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(this.getClass().getResource("/view/StackPaneWindow.fxml"));
-        Parent parent = loader.load();
+        Parent parent = (Parent) loader.load();
 
         DBServer server = DBServer.getInstance();
         MainController controller = loader.getController();

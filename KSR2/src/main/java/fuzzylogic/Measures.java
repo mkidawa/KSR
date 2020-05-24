@@ -45,13 +45,15 @@ public class Measures<T> {
     }
 
     public double degreeOfCovering(Summary<T> summary) {
-        if (summary.getQualifier() == null) return 0.0;
-
+        double qualifierMembership = 1.0;
         int t = 0;
         int h = 0;
 
         for (T obj : summary.getObjects()) {
-            if (summary.getQualifier().getMembership(obj) > 0) {
+            if (summary.getQualifier() != null) {
+                qualifierMembership = summary.getQualifier().getMembership(obj);
+            }
+            if (qualifierMembership > 0) {
                 h++;
                 if (summary.getSummarizers().size() == 1) {
                     if (summary.getSummarizers().get(0).getMembership(obj) > 0) {
@@ -71,13 +73,12 @@ public class Measures<T> {
 
     public double degreeOfAppropriateness(Summary<T> summary) {
         double product = 1.0;
-        List<Label<T>> all = summary.getSummarizers();
         double T3 = degreeOfCovering(summary);
 
-        for (Label<T> linguisticVariable : all) {
+        for (Label<T> summarizer : summary.getSummarizers()) {
             int r = 0;
             for (T obj : summary.getObjects()) {
-                if (linguisticVariable.getMembership(obj) > 0) {
+                if (summarizer.getMembership(obj) > 0) {
                     r++;
                 }
             }
