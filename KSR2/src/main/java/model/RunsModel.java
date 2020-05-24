@@ -6,9 +6,7 @@ import fuzzylogic.Label;
 import fuzzylogic.Measures;
 import fuzzyruns.PredefinedQuantifier;
 import fuzzyruns.PredefinedSummarizer;
-import org.apache.commons.beanutils.BeanUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class RunsModel {
     public PredefinedSummarizer summarizerGlobal;
     public PredefinedQuantifier quantifier = new PredefinedQuantifier();
     public List<Label<RunDao>> summarizers = new ArrayList<>();
-    public Label<RunDao> qualifier;
+    public Label<RunDao> qualifier = null;
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
         this.dataCollection = dataCollection;

@@ -10,7 +10,9 @@ public class Summary<T> {
 
     public Summary(Quantifier<T> quantifier, Label<T> qualifier, List<T> objects, List<Label<T>> summarizers) {
         this.quantifier = quantifier;
-        this.qualifier = qualifier;
+        if (qualifier != null) {
+            this.qualifier = qualifier;
+        }
         this.objects = objects;
         this.summarizers = summarizers;
     }

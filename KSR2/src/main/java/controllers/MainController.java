@@ -38,7 +38,7 @@ public class MainController {
         }
         int id = 0;
         model.summarizerGlobal = new PredefinedSummarizer(model.runs);
-        model.qualifier = model.summarizerGlobal.ageYoung;
+        //model.qualifier = model.summarizerGlobal.ageYoung;
 
         for (ComboBox iterator : comboBoxes) {
             iterator.getItems().addAll(model.summarizer.getAllSummarizerLabels());
@@ -129,7 +129,7 @@ public class MainController {
 
         for(Quantifier<RunDao> quantifier : model.quantifier.getQuantifiers())
         {
-            Summary<RunDao> summary = new Summary<RunDao>(quantifier, model.qualifier, model.runs, model.summarizers);
+            Summary<RunDao> summary = new Summary<>(quantifier, model.qualifier, model.runs, model.summarizers);
             double T1 = Math.round(model.measures.degreeOfTruth(summary) * 100d) / 100d;
             double T2 = Math.round(model.measures.degreeOfImprecision(summary) * 100d) / 100d;
             double T3 = Math.round(model.measures.degreeOfCovering(summary) * 100d) / 100d;

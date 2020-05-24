@@ -33,20 +33,20 @@ public class FuzzySet<T> {
     }
 
     public FuzzySet(List<T> objects, MembershipFunction membershipFunction, Function<T, Double> function) {
-        CrispSet<T> universe = new CrispSet<>(objects);
-        if (!universe.checkEmpty()) {
+        //CrispSet<T> universe = new CrispSet<>(objects);
+        //if (!universe.checkEmpty()) {
             this.universe = new CrispSet<>(objects);
             this.membershipFunction = membershipFunction;
             this.function = function;
-        }
+        //}
     }
 
     public FuzzySet(CrispSet<T> objects, MembershipFunction membershipFunction, Function<T, Double> function) {
-        if (!objects.checkEmpty()) {
+        //if (!objects.checkEmpty()) {
             this.universe = objects;
             this.membershipFunction = membershipFunction;
             this.function = function;
-        }
+        //}
     }
 
     public double getMembership(T obj) {

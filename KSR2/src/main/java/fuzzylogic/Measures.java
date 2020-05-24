@@ -45,6 +45,8 @@ public class Measures<T> {
     }
 
     public double degreeOfCovering(Summary<T> summary) {
+        if (summary.getQualifier() == null) return 0.0;
+
         int t = 0;
         int h = 0;
 
@@ -120,10 +122,13 @@ public class Measures<T> {
     }
 
     public double degreeOfQualifierImprecision(Summary<T> summary) {
+        if (summary.getQualifier() == null) return 0.0;
         return 1 - summary.getQualifier().fuzzySet.degreeOfFuzziness(summary.getObjects());
     }
 
     public double degreeOfQualifierCardinality(Summary<T> summary) {
+        if (summary.getQualifier() == null) return 0.0;
+
         double product = 1.0;
         List<Label<T>> all = summary.getQualifier().getAll();
 
@@ -134,6 +139,7 @@ public class Measures<T> {
     }
 
     public double lengthOfQualifier(Summary<T> summary) {
+        if (summary.getQualifier() == null) return 0.0;
         return 2 * Math.pow(0.5, summary.getQualifier().getAll().size());
     }
 
