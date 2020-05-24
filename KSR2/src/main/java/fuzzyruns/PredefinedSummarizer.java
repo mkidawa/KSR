@@ -25,6 +25,7 @@ public class PredefinedSummarizer {
     private LinguisticVariable<RunDao> lengthsBehind = new LinguisticVariable<>("lengths behind winner", objects, lengthsBehindFunc);
     private LinguisticVariable<RunDao> actualWeight = new LinguisticVariable<>("actual weight", objects, actualWeightFunc);
     private LinguisticVariable<RunDao> positionInSection = new LinguisticVariable<>("position in section", objects, positionInSectionFunc);
+    private LinguisticVariable<RunDao> lengthsBehindInSection = new LinguisticVariable<>("lengths behind in section", objects, lengthsBehindInSectionFunc);
 
     private static Function<RunDao, Double> ageFunc = run -> (double) run.getHorseAge();
     private static Function<RunDao, Double> declaredWeightFunc = RunDao::getDeclaredWeight;
@@ -34,6 +35,7 @@ public class PredefinedSummarizer {
     private static Function<RunDao, Double> lengthsBehindFunc = RunDao::getLengthsBehind;
     private static Function<RunDao, Double> actualWeightFunc = RunDao::getActualWeight;
     private static Function<RunDao, Double> positionInSectionFunc = run -> (double) run.getPositionSec1();
+    private static Function<RunDao, Double> lengthsBehindInSectionFunc = run -> (double) run.getBehindSec1();
 
     public PredefinedSummarizer() {
     }
@@ -76,6 +78,9 @@ public class PredefinedSummarizer {
         labels.add("positionInSectionHigh");
         labels.add("positionInSectionMiddle");
         labels.add("positionInSectionLow");
+        labels.add("lengthsBehindInSectionClose");
+        labels.add("lengthsBehindInSectionMedium");
+        labels.add("lengthsBehindInSectionFarBehind");
         return labels;
     };
 
@@ -118,6 +123,10 @@ public class PredefinedSummarizer {
     public Label<RunDao> positionInSectionHigh = new Label<>(positionInSection, new TrapezoidalFunction(1, 4.5, 1, 3.5), "at the front of the scoreboard");
     public Label<RunDao> positionInSectionMiddle = new Label<>(positionInSection, new TriangularFunction(3.5, 9.5, 7), "in the middle of the scoreboard");
     public Label<RunDao> positionInSectionLow = new Label<>(positionInSection, new TrapezoidalFunction(8.5, 14, 9.5, 14), "at the end of the scoreboard");
+
+    public Label<RunDao> lengthsBehindInSectionClose = new Label<>(lengthsBehindInSection, new TrapezoidalFunction(0.15, 3.5, 0.15, 2.5), "close behind");
+    public Label<RunDao> lengthsBehindInSectionMedium = new Label<>(lengthsBehindInSection, new TriangularFunction(2.5, 8.25, 4.75), "medium distance behind");
+    public Label<RunDao> lengthsBehindInSectionFarBehind = new Label<>(lengthsBehindInSection, new TrapezoidalFunction(6.95, 9.75, 8.25, 9.75), "far behind");
 
 
 }
