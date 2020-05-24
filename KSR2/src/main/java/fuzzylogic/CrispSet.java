@@ -16,4 +16,8 @@ public class CrispSet<T> {
     public void setSet(List<T> set) {
         this.set = set;
     }
+
+    public boolean checkEmpty() {
+        return set == null;
+    }
 }
