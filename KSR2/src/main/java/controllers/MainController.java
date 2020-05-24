@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
@@ -173,6 +174,7 @@ public class MainController {
         if (nrOfCurrentComboBoxes < COMBO_BOXES_LIMIT) {
             pane.getChildren().add(comboBoxes.get(nrOfCurrentComboBoxes));
             Label connective = new Label("and");
+            connective.setId("label" + nrOfCurrentComboBoxes);
             double comboBoxX = comboBoxes.get(nrOfCurrentComboBoxes - 1).getLayoutX();
             double comboBoxWidth = comboBoxes.get(nrOfCurrentComboBoxes - 1).getPrefWidth();
             connective.setLayoutX(comboBoxX + comboBoxWidth + 10);
@@ -182,6 +184,16 @@ public class MainController {
             pane.getChildren().add(connective);
             model.summarizers.add(new fuzzylogic.Label<RunDao>());
             nrOfCurrentComboBoxes++;
+        }
+    }
+
+    @FXML
+    public void onClickRemoveLastCombo() {
+        if (nrOfCurrentComboBoxes > 1) {
+            pane.getChildren().remove(comboBoxes.get(nrOfCurrentComboBoxes - 1));
+            int idOfLabelToRemove = nrOfCurrentComboBoxes - 1;
+            pane.getChildren().remove(pane.lookup("#label"+idOfLabelToRemove));
+            nrOfCurrentComboBoxes--;
         }
     }
 }

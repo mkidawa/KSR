@@ -25,5 +25,6 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <Button fx:id="comboGenerator1" contentDisplay="CENTER" layoutX="874.0" layoutY="741.0" mnemonicParsing="false" onAction="#onClickRemoveLastCombo" prefHeight="45.0" prefWidth="165.0" text="Remove box" />
     </children>
 </Pane>
