@@ -16,15 +16,13 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import model.RunsModel;
+import utils.LaTeXGenerator;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class MainController {
     private RunsModel model = new RunsModel();
@@ -163,10 +161,14 @@ public class MainController {
     @FXML
     public void onClickGenerateResult() {
         String text = new String();
-
-        for(Quantifier<RunDao> quantifier : model.quantifier.getQuantifiers())
+        String [][] values = new String[model.quantifier.getQuantifiers().size()][11];
+        int size = model.qualifier == null ? nrOfCurrentComboBoxes : nrOfCurrentComboBoxes + 1;
+        String [][] quantValues = new String[1][size];
+        String [] quantifier = new String[model.quantifier.getQuantifiers().size()];
+        List<String> colNames = new ArrayList<>();
+        for(int i = 0; i < model.quantifier.getQuantifiers().size(); i++)
         {
-            Summary<RunDao> summary = new Summary<>(quantifier, model.qualifier, model.runs, model.summarizers);
+            Summary<RunDao> summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, model.runs, model.summarizers);
             double T1 = Math.round(model.measures.degreeOfTruth(summary) * 100d) / 100d;
             double T2 = Math.round(model.measures.degreeOfImprecision(summary) * 100d) / 100d;
             double T3 = Math.round(model.measures.degreeOfCovering(summary) * 100d) / 100d;
@@ -178,22 +180,49 @@ public class MainController {
             double T9 = Math.round(model.measures.degreeOfQualifierImprecision(summary) * 100d) / 100d;
             double T10 = Math.round(model.measures.degreeOfQualifierCardinality(summary) * 100d) / 100d;
             double T11 = Math.round(model.measures.lengthOfQualifier(summary) * 100d) / 100d;
+            // PLZ DON'T LOOK
+            values[i][0] = Double.toString(T1);
+            values[i][1] = Double.toString(T2);
+            values[i][2] = Double.toString(T3);
+            values[i][3] = Double.toString(T4);
+            values[i][4] = Double.toString(T5);
+            values[i][5] = Double.toString(T6);
+            values[i][6] = Double.toString(T7);
+            values[i][7] = Double.toString(T8);
+            values[i][8] = Double.toString(T9);
+            values[i][9] = Double.toString(T10);
+            values[i][10] = Double.toString(T11);
 
-            text += quantifier.getLinguisticVariableName() + " of runs ";
+            text += model.quantifier.getQuantifiers().get(i).getLinguisticVariableName() + " of runs ";
             if(model.qualifier != null) {
                 text +=" having / being " + model.qualifier.getLinguisticVariableName() + " " + model.qualifier.getLabelName();
             }
-
-            for (int i = 0; i < nrOfCurrentComboBoxes; i++){
-                String connective = i > 0 ? " and " : " were with ";
-                text +=  connective + model.summarizers.get(i).getLinguisticVariableName() + " " + model.summarizers.get(i).getLabelName();
+            quantifier[i] = model.quantifier.getQuantifiers().get(i).getLinguisticVariableName();
+            for (int j = 0; j < nrOfCurrentComboBoxes; j++){
+                String connective = j > 0 ? " and " : " were with ";
+                text +=  connective + model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
+                quantValues[0][j] = model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
             }
-
             text += "\n [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
+
+        }
+        for (int j = 0; j < nrOfCurrentComboBoxes; j++){
+            colNames.add("Sumaryzator" + Integer.toString(j + 1));
+            String connective = j > 0 ? " and " : " were with ";
+            quantValues[0][j] = model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
+        }
+        if (model.qualifier != null) {
+            colNames.add("Kwalifikator");
+            quantValues[0][colNames.size() - 1] = model.qualifier.getLinguisticVariableName()+ " " + model.qualifier.getLabelName();
         }
         result.setText(text);
         setGeneratedSummary(text);
         fileGenerator.setVisible(true);
+        LaTeXGenerator generator = new LaTeXGenerator(model.quantifier.getQuantifiers().size(), 12, Arrays.asList("Kwantyfikator","T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11"), "Miary jakości" ,values);
+        LaTeXGenerator generator2 = new LaTeXGenerator(1, colNames.size(), colNames, "Parametry podsumowania" ,quantValues);
+        generator.setQuantifier(quantifier);
+        System.out.println(generator.generateLaTeXTable());
+        System.out.println(generator2.generateLaTeXTable());
     }
 
     @FXML
