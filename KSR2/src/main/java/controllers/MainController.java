@@ -17,7 +17,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import model.RunsModel;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainController {
@@ -26,7 +32,7 @@ public class MainController {
     private int nrOfStartingComboBoxes = 1;
     private int nrOfCurrentComboBoxes = 1;
     private static final int COMBO_BOXES_LIMIT = 5;
-    private String generatedSummary = new String();
+    private String generatedSummary;
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
         model.setDataCollection(dataCollection);
@@ -86,6 +92,9 @@ public class MainController {
     private Button comboGenerator;
 
     @FXML
+    private Button fileGenerator = new Button();
+
+    @FXML
     private Label result;
 
     @FXML
@@ -109,7 +118,7 @@ public class MainController {
     @FXML
     private Pane pane;
 
-    public MainController() {
+    public MainController() throws FileNotFoundException {
     }
 
     public String getGeneratedSummary() {
@@ -145,6 +154,7 @@ public class MainController {
         comboBoxes.add(combo3);
         comboBoxes.add(combo4);
         comboBoxes.add(combo5);
+        fileGenerator.setVisible(false);
     }
 
     @FXML
@@ -179,6 +189,8 @@ public class MainController {
             text += "\n [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
         }
         result.setText(text);
+        setGeneratedSummary(text);
+        fileGenerator.setVisible(true);
     }
 
     @FXML
@@ -207,5 +219,18 @@ public class MainController {
             pane.getChildren().remove(pane.lookup("#label"+idOfLabelToRemove));
             nrOfCurrentComboBoxes--;
         }
+    }
+
+    @FXML
+    public void onClickSaveSummary() throws FileNotFoundException {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(Date.from(Instant.now()));
+        String result = String.format(
+                "summary-%1$tY-%1$tm-%1$td-%1$tk-%1$tM-%1$tS-%1$tp.txt", cal);
+
+        PrintWriter out = new PrintWriter(new FileOutputStream(result), true);
+        String text = getGeneratedSummary();
+        out.println(text);
+        out.close();
     }
 }

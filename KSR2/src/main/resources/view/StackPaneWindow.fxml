@@ -26,5 +26,6 @@
          </font>
       </Label>
       <Button fx:id="comboGenerator1" contentDisplay="CENTER" layoutX="874.0" layoutY="828.0" mnemonicParsing="false" onAction="#onClickRemoveLastCombo" prefHeight="45.0" prefWidth="165.0" text="Remove box" />
+      <Button fx:id="fileGenerator" onAction="#onClickSaveSummary" layoutX="1240.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="101.0" text="Save Summary" />
     </children>
 </Pane>
