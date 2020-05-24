@@ -5,9 +5,15 @@ import dao.RunDao;
 import fuzzylogic.Quantifier;
 import fuzzylogic.Summary;
 import fuzzyruns.PredefinedSummarizer;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import model.RunsModel;
@@ -19,6 +25,9 @@ public class MainController {
     private RunsModel model = new RunsModel();
     private List<ComboBox> comboBoxes;
     private int nrOfStartingComboBoxes = 2;
+    private int nrOfCurrentComboBoxes = 2;
+    private static final int COMBO_BOXES_LIMIT = 5;
+
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
         model.setDataCollection(dataCollection);
     }
@@ -27,12 +36,31 @@ public class MainController {
         for (RunDao cur : model.getDataCollection().find()) {
             model.addRun(cur);
         }
+        int id = 0;
+        model.summarizerGlobal = new PredefinedSummarizer(model.runs);
+        model.qualifier = model.summarizerGlobal.ageYoung;
+
         for (ComboBox iterator : comboBoxes) {
             iterator.getItems().addAll(model.summarizer.getAllSummarizerLabels());
             iterator.setValue(model.summarizer.getAllSummarizerLabels().get(0));
+            iterator.setEditable(true);
+            iterator.setId(String.valueOf(id));
+            iterator.valueProperty().addListener(new ChangeListener<String>() {
+                @Override public void changed(ObservableValue ov, String t, String value) {
+                    int comboBoxId = Integer.parseInt(iterator.getId());
+                    try {
+                        model.setSummarizerType(comboBoxId, value);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            id++;
         }
         for (int i = 0; i < nrOfStartingComboBoxes; i++) {
-            System.out.println(comboBoxes.get(i));
+            model.summarizers.add(new fuzzylogic.Label<RunDao>());
             pane.getChildren().add(comboBoxes.get(i));
         }
 
@@ -67,6 +95,13 @@ public class MainController {
     public MainController() {
     }
 
+//    private class MyButtonHandler implements EventHandler<ActionEvent> {
+//        @Override
+//        public void handle(ActionEvent evt) {
+//            System.out.println(evt.getSource());
+//        }
+//    }
+
     void setComboBoxProperty(ComboBox box, double x) {
        box.setLayoutX(x);
        box.setLayoutY(66);
@@ -91,11 +126,6 @@ public class MainController {
     @FXML
     public void onClickGenerateResult() {
         String text = new String();
-        model.summarizerGlobal = new PredefinedSummarizer(model.runs);
-        model.summarizer1 = model.summarizerGlobal.ageYoung;
-        model.qualifier = model.summarizerGlobal.ageYoung;
-        model.summarizers.add(model.summarizer1);
-        model.summarizers.add(model.summarizer2);
 
         for(Quantifier<RunDao> quantifier : model.quantifier.getQuantifiers())
         {
@@ -112,9 +142,12 @@ public class MainController {
             double T10 = Math.round(model.measures.degreeOfQualifierCardinality(summary) * 100d) / 100d;
             double T11 = Math.round(model.measures.lengthOfQualifier(summary) * 100d) / 100d;
 
+            for (int i = 0; i < nrOfCurrentComboBoxes; i++){
+                text += quantifier.getLinguisticVariableName() + " " + model.summarizers.get(i).getLinguisticVariableName() + ": " + model.summarizers.get(i).getLabelName();
+            }
             //text += quantifier.getLinguisticVariableName() + " of horses being " + model.qualifier.getLinguisticVariableName() + " of: " + model.qualifier.getLabelName() + " were of " + model.summarizer2.getLinguisticVariableName() + ": " + model.summarizer2.getLabelName() + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
             // System.out.println(quantifier.getName() + " of horses being " + model.qualifier.getName() + " of: " + model.qualifier.getLabel() + " were of " + model.summarizer2.getName() + ": " + model.summarizer2.getLabel() + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]");
-            text += quantifier.getLinguisticVariableName() + " of horses were of " + model.summarizers.get(0).getLinguisticVariableName() + ": " + model.summarizers.get(0).getLabelName() + " and of " + model.summarizers.get(1).getLinguisticVariableName() + ": " + model.summarizers.get(1).getLabelName() + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
+            text += " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
             // System.out.println(quantifier.getName() + " of horses were of " + model.summarizer1.getName() + ": " + model.summarizer1.getLabel() + " or of " + model.summarizer2.getName() + ": " + model.summarizer2.getLabel() + " [" + model.measures.degreeOfTruth(quantifier, null, model.and, model.runs) + "]");
             // System.out.println(quantifier.getName() + " of horses were of " + model.summarizer1.getName() + ": " + model.summarizer1.getLabel() + " [" + model.measures.degreeOfTruth(quantifier, null , model.summarizer1, model.runs) + "]");
         }
@@ -123,7 +156,10 @@ public class MainController {
 
     @FXML
     public void onClickAddNewCombo() {
-        pane.getChildren().add(comboBoxes.get(nrOfStartingComboBoxes));
-        nrOfStartingComboBoxes++;
+        if (nrOfCurrentComboBoxes < COMBO_BOXES_LIMIT) {
+            pane.getChildren().add(comboBoxes.get(nrOfCurrentComboBoxes));
+            model.summarizers.add(new fuzzylogic.Label<RunDao>());
+            nrOfCurrentComboBoxes++;
+        }
     }
 }

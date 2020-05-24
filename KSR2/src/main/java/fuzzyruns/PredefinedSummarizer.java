@@ -11,17 +11,11 @@ import java.util.List;
 import java.util.function.Function;
 
 public class PredefinedSummarizer {
-    private List<Label<RunDao>> summarizers;
-
     public List<RunDao> getObjects() {
         return objects;
     }
 
     private List<RunDao> objects;
-
-    public List<Label<RunDao>> getSummarizers() {
-        return summarizers;
-    }
 
     private LinguisticVariable<RunDao> age = new LinguisticVariable<>("horse age", objects, ageFunc);
     private LinguisticVariable<RunDao> declaredWeight = new LinguisticVariable<>("declared weight", objects, declaredWeightFunc);
@@ -40,36 +34,6 @@ public class PredefinedSummarizer {
     private static Function<RunDao, Double> actualWeightFunc = RunDao::getActualWeight;
 
     public PredefinedSummarizer() {
-        summarizers = new ArrayList<>();
-        summarizers.add(ageYoung);
-        summarizers.add(ageMiddleAged);
-        summarizers.add(ageOld);
-        summarizers.add(declaredWeightVeryLight);
-        summarizers.add(declaredWeightLight);
-        summarizers.add(declaredWeightMedium);
-        summarizers.add(declaredWeightHeavy);
-        summarizers.add(declaredWeightVeryHeavy);
-        summarizers.add(ratingLow);
-        summarizers.add(ratingMedium);
-        summarizers.add(ratingHigh);
-        summarizers.add(finishTimeVeryFast);
-        summarizers.add(finishTimeFast);
-        summarizers.add(finishTimeMedium);
-        summarizers.add(finishTimeSlow);
-        summarizers.add(finishTimeVerySlow);
-        summarizers.add(winOddsLow);
-        summarizers.add(winOddsMedium);
-        summarizers.add(winOddsHigh);
-        summarizers.add(lengthsBehindVeryFew);
-        summarizers.add(lengthsBehindFew);
-        summarizers.add(lengthsBehindSome);
-        summarizers.add(lengthsBehindMany);
-        summarizers.add(lengthsBehindVeryMany);
-        summarizers.add(actualWeightVeryLight);
-        summarizers.add(actualWeightLight);
-        summarizers.add(actualWeightMedium);
-        summarizers.add(actualWeightHeavy);
-        summarizers.add(actualWeightVeryHeavy);
     }
 
     public PredefinedSummarizer(List<RunDao> objects) {
@@ -78,14 +42,35 @@ public class PredefinedSummarizer {
 
     public List<String> getAllSummarizerLabels() {
         List<String> labels = new ArrayList<>();
-        labels.add(ageYoung.getLinguisticVariableName() + " " + ageYoung.getLabelName());
-        labels.add(ageMiddleAged.getLinguisticVariableName() + " " + ageMiddleAged.getLabelName());
-        labels.add(ageOld.getLinguisticVariableName() + " " + ageOld.getLabelName());
-        labels.add(declaredWeightVeryLight.getLinguisticVariableName() + " " + declaredWeightVeryLight.getLabelName() );
-        labels.add(declaredWeightLight.getLinguisticVariableName() + " " + declaredWeightLight.getLabelName());
-        labels.add(declaredWeightMedium.getLinguisticVariableName() + " " + declaredWeightMedium.getLabelName());
-        labels.add(declaredWeightHeavy.getLinguisticVariableName() + " " + declaredWeightHeavy.getLabelName());
-        labels.add(declaredWeightVeryHeavy.getLinguisticVariableName() + " " + declaredWeightVeryHeavy.getLabelName());
+        labels.add("ageYoung");
+        labels.add("ageMiddleAged");
+        labels.add("ageOld");
+        labels.add("declaredWeightVeryLight");
+        labels.add("declaredWeightLight");
+        labels.add("declaredWeightMedium");
+        labels.add("declaredWeightHeavy");
+        labels.add("declaredWeightVeryHeavy");
+        labels.add("ratingLow");
+        labels.add("ratingMedium");
+        labels.add("ratingHigh");
+        labels.add("finishTimeVeryFast");
+        labels.add("finishTimeFast");
+        labels.add("finishTimeMedium");
+        labels.add("finishTimeSlow");
+        labels.add("finishTimeVerySlow");
+        labels.add("winOddsLow");
+        labels.add("winOddsMedium");
+        labels.add("winOddsHigh");
+        labels.add("lengthsBehindVeryFew");
+        labels.add("lengthsBehindFew");
+        labels.add("lengthsBehindSome");
+        labels.add("lengthsBehindMany");
+        labels.add("lengthsBehindVeryMany");
+        labels.add("actualWeightVeryLight");
+        labels.add("actualWeightLight");
+        labels.add("actualWeightMedium");
+        labels.add("actualWeightHeavy");
+        labels.add("actualWeightVeryHeavy");
         return labels;
     };
 
