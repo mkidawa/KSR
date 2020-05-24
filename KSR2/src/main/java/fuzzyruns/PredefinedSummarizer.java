@@ -24,6 +24,7 @@ public class PredefinedSummarizer {
     private LinguisticVariable<RunDao> winOdds = new LinguisticVariable<>("win odds", objects, winOddsFun);
     private LinguisticVariable<RunDao> lengthsBehind = new LinguisticVariable<>("lengths behind winner", objects, lengthsBehindFunc);
     private LinguisticVariable<RunDao> actualWeight = new LinguisticVariable<>("actual weight", objects, actualWeightFunc);
+    private LinguisticVariable<RunDao> positionInSection = new LinguisticVariable<>("position in section", objects, positionInSectionFunc);
 
     private static Function<RunDao, Double> ageFunc = run -> (double) run.getHorseAge();
     private static Function<RunDao, Double> declaredWeightFunc = RunDao::getDeclaredWeight;
@@ -32,6 +33,7 @@ public class PredefinedSummarizer {
     private static Function<RunDao, Double> winOddsFun = RunDao::getWinOdds;
     private static Function<RunDao, Double> lengthsBehindFunc = RunDao::getLengthsBehind;
     private static Function<RunDao, Double> actualWeightFunc = RunDao::getActualWeight;
+    private static Function<RunDao, Double> positionInSectionFunc = run -> (double) run.getPositionSec1();
 
     public PredefinedSummarizer() {
     }
@@ -71,6 +73,9 @@ public class PredefinedSummarizer {
         labels.add("actualWeightMedium");
         labels.add("actualWeightHeavy");
         labels.add("actualWeightVeryHeavy");
+        labels.add("positionInSectionHigh");
+        labels.add("positionInSectionMiddle");
+        labels.add("positionInSectionLow");
         return labels;
     };
 
@@ -109,5 +114,10 @@ public class PredefinedSummarizer {
     public Label<RunDao> actualWeightMedium = new Label<>(actualWeight, new TriangularFunction(109.0, 123.0, 115.0), "medium");
     public Label<RunDao> actualWeightHeavy = new Label<>(actualWeight, new TriangularFunction(115.0, 127.0, 121.0), "heavy");
     public Label<RunDao> actualWeightVeryHeavy = new Label<>(actualWeight, new TrapezoidalFunction(121.0, 133.0, 127.0, 133.0), "very heavy");
+
+    public Label<RunDao> positionInSectionHigh = new Label<>(positionInSection, new TrapezoidalFunction(1, 4.5, 1, 3.5), "at the front of the scoreboard");
+    public Label<RunDao> positionInSectionMiddle = new Label<>(positionInSection, new TriangularFunction(3.5, 9.5, 7), "in the middle of the scoreboard");
+    public Label<RunDao> positionInSectionLow = new Label<>(positionInSection, new TrapezoidalFunction(8.5, 14, 9.5, 14), "at the end of the scoreboard");
+
 
 }
