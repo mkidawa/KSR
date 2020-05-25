@@ -272,4 +272,5 @@ public class MainController {
         qualifier.valueProperty().set(null);
         model.qualifier = null;
     }
+
 }

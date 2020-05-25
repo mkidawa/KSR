@@ -31,6 +31,7 @@ public class App extends Application {
         primaryStage.sizeToScene();
         primaryStage.setTitle("KSR zad 2");
         primaryStage.show();
+        primaryStage.setOnCloseRequest(e -> DBServer.closeConnection());
     }
 
 }
