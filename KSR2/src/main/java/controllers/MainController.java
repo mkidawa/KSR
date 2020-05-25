@@ -2,19 +2,14 @@ package controllers;
 
 import com.mongodb.client.MongoCollection;
 import dao.RunDao;
-import fuzzylogic.Quantifier;
 import fuzzylogic.Summary;
 import fuzzyruns.PredefinedSummarizer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import model.RunsModel;
 import utils.LaTeXGenerator;
 
@@ -83,9 +78,9 @@ public class MainController {
         }
         for (int i = 0; i < nrOfStartingComboBoxes; i++) {
             model.summarizers.add(new fuzzylogic.Label<RunDao>());
-            pane.getChildren().add(comboBoxes.get(i));
+            summaryTab.getChildren().add(comboBoxes.get(i));
         }
-        pane.getChildren().add(qualifier);
+        summaryTab.getChildren().add(qualifier);
 
     }
     @FXML
@@ -238,7 +233,7 @@ public class MainController {
             connective.setPrefWidth(40);
             connective.setLayoutY(68);
             connective.setAlignment(Pos.CENTER);
-            pane.getChildren().add(connective);
+            summaryTab.getChildren().add(connective);
             model.summarizers.add(new fuzzylogic.Label<RunDao>());
             nrOfCurrentComboBoxes++;
         }
@@ -247,9 +242,9 @@ public class MainController {
     @FXML
     public void onClickRemoveLastCombo() {
         if (nrOfCurrentComboBoxes > 1) {
-            pane.getChildren().remove(comboBoxes.get(nrOfCurrentComboBoxes - 1));
+            summaryTab.getChildren().remove(comboBoxes.get(nrOfCurrentComboBoxes - 1));
             int idOfLabelToRemove = nrOfCurrentComboBoxes - 1;
-            pane.getChildren().remove(pane.lookup("#label"+idOfLabelToRemove));
+            summaryTab.getChildren().remove(summaryTab.lookup("#label"+idOfLabelToRemove));
             nrOfCurrentComboBoxes--;
         }
     }
