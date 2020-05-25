@@ -22,7 +22,7 @@ public class DBServer {
     private static MongoCollection<RunDao> runs;
 
     private DBServer() {
-        ConnectionString connectionString = new ConnectionString("mongodb+srv://admin:admin@cluster0-5cjvr.mongodb.net/test?retryWrites=true&w=majority");
+        ConnectionString connectionString = new ConnectionString("mongodb+srv://admin:uSZDPPNM4sfp4vFc@cluster0-5cjvr.mongodb.net/test?retryWrites=true&w=majority");
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                 fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
@@ -42,4 +42,8 @@ public class DBServer {
         return instance;
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        client.close();
+    }
 }
