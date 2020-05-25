@@ -93,6 +93,9 @@ public class MainController {
     private Label result;
 
     @FXML
+    private CheckBox shouldGenerateTables = new CheckBox();
+
+    @FXML
     private ComboBox combo1 = new ComboBox();
 
     @FXML
@@ -111,7 +114,7 @@ public class MainController {
     private ComboBox qualifier = new ComboBox();
 
     @FXML
-    private Pane pane;
+    private AnchorPane summaryTab;
 
     public MainController() throws FileNotFoundException {
     }
@@ -199,8 +202,9 @@ public class MainController {
                 quantValues[0][j] = model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
             }
             text += ".\n";
-            // text += "\n [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
-
+            if(!shouldGenerateTables.isSelected()){
+                text += "[T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
+            }
         }
         for (int j = 0; j < nrOfCurrentComboBoxes; j++){
             colNames.add("Sumaryzator" + Integer.toString(j + 1));
@@ -214,17 +218,19 @@ public class MainController {
         result.setText(text);
         setGeneratedSummary(text);
         fileGenerator.setVisible(true);
-        LaTeXGenerator generator = new LaTeXGenerator(model.quantifier.getQuantifiers().size(), 12, Arrays.asList("Kwantyfikator","T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11"), "Miary jakości" ,values);
-        LaTeXGenerator generator2 = new LaTeXGenerator(1, colNames.size(), colNames, "Parametry podsumowania" ,quantValues);
-        generator.setQuantifier(quantifier);
-        System.out.println(generator.generateLaTeXTable());
-        System.out.println(generator2.generateLaTeXTable());
+        if(shouldGenerateTables.isSelected()) {
+            LaTeXGenerator generator = new LaTeXGenerator(model.quantifier.getQuantifiers().size(), 12, Arrays.asList("Kwantyfikator","T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11"), "Miary jakości" ,values);
+            LaTeXGenerator generator2 = new LaTeXGenerator(1, colNames.size(), colNames, "Parametry podsumowania" ,quantValues);
+            generator.setQuantifier(quantifier);
+            System.out.println(generator.generateLaTeXTable());
+            System.out.println(generator2.generateLaTeXTable());
+        }
     }
 
     @FXML
     public void onClickAddNewCombo() {
         if (nrOfCurrentComboBoxes < COMBO_BOXES_LIMIT) {
-            pane.getChildren().add(comboBoxes.get(nrOfCurrentComboBoxes));
+            summaryTab.getChildren().add(comboBoxes.get(nrOfCurrentComboBoxes));
             Label connective = new Label("and");
             connective.setId("label" + nrOfCurrentComboBoxes);
             double comboBoxX = comboBoxes.get(nrOfCurrentComboBoxes - 1).getLayoutX();
