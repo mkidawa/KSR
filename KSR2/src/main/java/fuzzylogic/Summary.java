@@ -6,6 +6,7 @@ public class Summary<T> {
     private Quantifier<T> quantifier;
     private Label<T> qualifier;
     private List<T> objects;
+    private List<T> objects2;
     private List<Label<T>> summarizers;
 
     public Summary(Quantifier<T> quantifier, Label<T> qualifier, List<T> objects, List<Label<T>> summarizers) {
@@ -14,6 +15,16 @@ public class Summary<T> {
             this.qualifier = qualifier;
         }
         this.objects = objects;
+        this.summarizers = summarizers;
+    }
+
+    public Summary(Quantifier<T> quantifier, Label<T> qualifier, List<T> subject1, List<T> subject2, List<Label<T>> summarizers) {
+        this.quantifier = quantifier;
+        if (qualifier != null) {
+            this.qualifier = qualifier;
+        }
+        this.objects = subject1;
+        this.objects2 = subject2;
         this.summarizers = summarizers;
     }
 
@@ -47,6 +58,14 @@ public class Summary<T> {
 
     public void setSummarizers(List<Label<T>> summarizers) {
         this.summarizers = summarizers;
+    }
+
+    public List<T> getObjects2() {
+        return objects2;
+    }
+
+    public void setObjects2(List<T> objects2) {
+        this.objects2 = objects2;
     }
 
     @Override

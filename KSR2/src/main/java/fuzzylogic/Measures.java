@@ -7,7 +7,9 @@ import java.util.List;
 public class Measures<T> {
     public double degreeOfTruth(Summary<T> summary) {
         double r = 0;
+        double r2 = 0;
         double m = 0;
+        double m2 = 0;
 
         if (summary.getQualifier() == null) { // summary without qualifier
             for (T obj : summary.getObjects()) {
@@ -18,6 +20,16 @@ public class Measures<T> {
                 }
             }
             m = summary.getObjects().size();
+            if (summary.getObjects2() != null) {
+                for (T obj : summary.getObjects2()) {
+                    if (summary.getSummarizers().size() == 1) {
+                        r2 += summary.getSummarizers().get(0).getMembership(obj);
+                    } else if (summary.getSummarizers().size() > 1) {
+                        r2 += Label.<T>andConnective(summary.getSummarizers(), obj);
+                    }
+                }
+                m2 = summary.getObjects2().size();
+            }
         } else {
             for (T obj : summary.getObjects()) {
                 if (summary.getSummarizers().size() == 1) {
@@ -32,6 +44,9 @@ public class Measures<T> {
         if (summary.getQuantifier().isAbsolute() && summary.getQualifier() == null) {
             return summary.getQuantifier().getFuzzySet().getMembershipFunction().getMembership(r);
         } else if (!summary.getQuantifier().isAbsolute()) {
+            if (summary.getObjects2() != null) {
+                return summary.getQuantifier().getFuzzySet().getMembershipFunction().getMembership((r / m) / (r / m + r2 / m2));
+            }
             return summary.getQuantifier().getFuzzySet().getMembershipFunction().getMembership(r / m);
         } else return 0.0;
     }

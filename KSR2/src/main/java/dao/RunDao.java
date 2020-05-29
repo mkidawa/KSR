@@ -12,6 +12,9 @@ public class RunDao {
     @BsonProperty(value = "horse_age")
     private int horseAge;
 
+    @BsonProperty(value = "horse_type")
+    private String horseType;
+
     @BsonProperty(value = "lengths_behind")
     private double lengthsBehind;
 
@@ -95,13 +98,13 @@ public class RunDao {
         this.horseId = horseId;
     }
 
-    public int getHorseAge() {
-        return horseAge;
-    }
+    public int getHorseAge() { return horseAge; }
 
-    public void setHorseAge(int horseAge) {
-        this.horseAge = horseAge;
-    }
+    public void setHorseAge(int horseAge) { this.horseAge = horseAge; }
+
+    public String getHorseType() { return horseType; }
+
+    public void setHorseType(String horseType) { this.horseType = horseType; }
 
     public double getLengthsBehind() {
         return lengthsBehind;

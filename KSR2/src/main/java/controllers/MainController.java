@@ -1,6 +1,7 @@
 package controllers;
 
 import com.mongodb.client.MongoCollection;
+import com.sun.xml.internal.ws.api.FeatureConstructor;
 import dao.RunDao;
 import fuzzylogic.Summary;
 import fuzzyruns.PredefinedSummarizer;
@@ -28,6 +29,8 @@ public class MainController {
     private static final int COMBO_BOXES_LIMIT = 5;
     private List<TextField> weights;
     private String generatedSummary;
+    private String subject1Selected;
+    private String subject2Selected;
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
         model.setDataCollection(dataCollection);
@@ -87,6 +90,22 @@ public class MainController {
         }
         summaryTab.getChildren().add(qualifier);
 
+        subject1.getItems().addAll(model.horseTypes);
+        subject2.getItems().addAll(model.horseTypes);
+        subject1.setEditable(true);
+        subject2.setEditable(true);
+        subject1.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                subject1Selected = newValue;
+            }
+        });
+        subject2.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                subject2Selected = newValue;
+            }
+        });
     }
     @FXML
     private Button generate = new Button();
@@ -99,6 +118,9 @@ public class MainController {
 
     @FXML
     private CheckBox shouldGenerateTables = new CheckBox();
+
+    @FXML
+    private CheckBox multiSubjectSummary = new CheckBox();
 
     @FXML
     private ComboBox combo1 = new ComboBox();
@@ -153,6 +175,12 @@ public class MainController {
 
     @FXML
     private TextField tf11 = new TextField();
+
+    @FXML
+    private ComboBox subject1 = new ComboBox();
+
+    @FXML
+    private ComboBox subject2 = new ComboBox();
 
     public MainController() throws FileNotFoundException {
     }
@@ -249,6 +277,14 @@ public class MainController {
         weights.add(tf9);
         weights.add(tf10);
         weights.add(tf11);
+        setComboBoxProperty(subject1, 1175.0, 677.0);
+        setComboBoxProperty(subject2, 1175.0, 719.0);
+        multiSubjectSummary.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                addMultiSubjectComboBoxes(newValue);
+            }
+        });
         fileGenerator.setVisible(false);
         generate.setVisible(false);
     }
@@ -265,9 +301,28 @@ public class MainController {
         for (int i = 0; i < weights.size(); i++) {
             weightValues.add(new Double(weights.get(i).getText()));
         }
+        List<RunDao> objects1 = null;
+        List<RunDao> objects2 = null;
+        if(multiSubjectSummary.isSelected()) {
+            objects1 = new ArrayList<>();
+            objects2 = new ArrayList<>();
+            for (int i = 0; i < model.runs.size(); i++) {
+                if (model.runs.get(i).getHorseType().equals(subject1Selected)) {
+                    objects1.add(model.runs.get(i));
+                } else if (model.runs.get(i).getHorseType().equals(subject2Selected)) {
+                    objects2.add(model.runs.get(i));
+                }
+            }
+        }
+
         for(int i = 0; i < model.quantifier.getQuantifiers().size(); i++)
         {
-            Summary<RunDao> summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, model.runs, model.summarizers);
+            Summary<RunDao> summary;
+            if (multiSubjectSummary.isSelected()) {
+                summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, objects1, objects2 , model.summarizers);
+            } else {
+                summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, model.runs, model.summarizers);
+            }
             double T1 = Math.round(model.measures.degreeOfTruth(summary) * 100d) / 100d;
             double T2 = Math.round(model.measures.degreeOfImprecision(summary) * 100d) / 100d;
             double T3 = Math.round(model.measures.degreeOfCovering(summary) * 100d) / 100d;
@@ -295,6 +350,11 @@ public class MainController {
             double T = Math.round(model.measures.goodnessOfTheSummary(summary, weightValues) * 100d) / 100d;
 
             text += model.quantifier.getQuantifiers().get(i).getLinguisticVariableName() + " of runs ";
+
+            if (multiSubjectSummary.isSelected()) {
+                text += "by " + subject1Selected + " horses compared to runs by " + subject2Selected + " horses ";
+            }
+
             if(model.qualifier != null) {
                 text +=" having / being " + model.qualifier.getLinguisticVariableName() + " " + model.qualifier.getLabelName();
             }
@@ -376,5 +436,17 @@ public class MainController {
         qualifier.valueProperty().set(null);
         model.qualifier = null;
     }
+
+    public void addMultiSubjectComboBoxes(Boolean checked) {
+        if (checked) {
+            summaryTab.getChildren().add(subject1);
+            summaryTab.getChildren().add(subject2);
+        } else {
+            summaryTab.getChildren().remove(subject1);
+            summaryTab.getChildren().remove(subject2);
+        }
+    }
+
+
 
 }

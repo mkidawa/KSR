@@ -42,7 +42,8 @@
             <Label layoutX="1200.0" layoutY="450.0" text="w9" />
             <Label layoutX="1200.0" layoutY="490.0" text="w10" />
             <Label layoutX="1200.0" layoutY="530.0" text="w11" />
-            <Button fx:id="checkWeights" onAction="#checkWeights" layoutX="1240.0" layoutY="584.0" mnemonicParsing="false" text="Check weights" />
+            <Button fx:id="checkWeights" layoutX="1240.0" layoutY="584.0" mnemonicParsing="false" onAction="#checkWeights" text="Check weights" />
+            <CheckBox fx:id="multiSubjectSummary" layoutX="1183.0" layoutY="635.0" mnemonicParsing="false" text="multi-subject summary?" />
             </children>
         </AnchorPane>
     </Tab>

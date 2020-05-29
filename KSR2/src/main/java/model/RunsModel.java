@@ -7,6 +7,7 @@ import fuzzylogic.Measures;
 import fuzzyruns.PredefinedQuantifier;
 import fuzzyruns.PredefinedSummarizer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RunsModel {
@@ -21,6 +22,14 @@ public class RunsModel {
     public PredefinedQuantifier quantifier = new PredefinedQuantifier();
     public List<Label<RunDao>> summarizers = new ArrayList<>();
     public Label<RunDao> qualifier = null;
+    public List<String> horseTypes = new ArrayList<>(Arrays.asList(
+            "Gelding",
+            "Colt",
+            "Filly",
+            "Horse",
+            "Mare",
+            "Rig"
+    ));
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
         this.dataCollection = dataCollection;
