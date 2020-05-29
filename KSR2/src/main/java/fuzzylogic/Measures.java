@@ -31,13 +31,32 @@ public class Measures<T> {
                 m2 = summary.getObjects2().size();
             }
         } else {
-            for (T obj : summary.getObjects()) {
-                if (summary.getSummarizers().size() == 1) {
-                    r += Math.min(summary.getSummarizers().get(0).getMembership(obj), summary.getQualifier().getMembership(obj));
-                } else if (summary.getSummarizers().size() > 1) {
-                    r += Math.min(Label.<T>andConnective(summary.getSummarizers(), obj), summary.getQualifier().getMembership(obj));
+            if (summary.getObjects2() != null) {
+                for (T obj : summary.getObjects()) {
+                    if (summary.getSummarizers().size() == 1) {
+                        r += summary.getSummarizers().get(0).getMembership(obj);
+                    } else if (summary.getSummarizers().size() > 1) {
+                        r += Label.<T>andConnective(summary.getSummarizers(), obj);
+                    }
                 }
-                m += summary.getQualifier().getMembership(obj);
+                m = summary.getObjects().size();
+                for (T obj : summary.getObjects2()) {
+                    if (summary.getSummarizers().size() == 1) {
+                        r2 += Math.min(summary.getSummarizers().get(0).getMembership(obj), summary.getQualifier().getMembership(obj));
+                    } else if (summary.getSummarizers().size() > 1) {
+                        r2 += Math.min(Label.<T>andConnective(summary.getSummarizers(), obj), summary.getQualifier().getMembership(obj));
+                    }
+                }
+                m2 = summary.getObjects2().size();
+            } else {
+                for (T obj : summary.getObjects()) {
+                    if (summary.getSummarizers().size() == 1) {
+                        r += Math.min(summary.getSummarizers().get(0).getMembership(obj), summary.getQualifier().getMembership(obj));
+                    } else if (summary.getSummarizers().size() > 1) {
+                        r += Math.min(Label.<T>andConnective(summary.getSummarizers(), obj), summary.getQualifier().getMembership(obj));
+                    }
+                    m += summary.getQualifier().getMembership(obj);
+                }
             }
         }
 

@@ -360,7 +360,7 @@ public class MainController {
             }
             quantifier[i] = model.quantifier.getQuantifiers().get(i).getLinguisticVariableName();
             for (int j = 0; j < nrOfCurrentComboBoxes; j++){
-                String connective = j > 0 ? " and " : "were with ";
+                String connective = j > 0 ? " and " : " were with ";
                 text +=  connective + model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
                 quantValues[0][j] = model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
             }
