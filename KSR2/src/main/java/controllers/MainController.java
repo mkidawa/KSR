@@ -315,10 +315,11 @@ public class MainController {
             }
         }
 
-        for(int i = 0; i < model.quantifier.getQuantifiers().size(); i++)
-        {
+        for(int i = 0; i < model.quantifier.getQuantifiers().size(); i++) {
             Summary<RunDao> summary;
+            if (model.qualifier != null && model.quantifier.getQuantifiers().get(i).isAbsolute()) continue;
             if (multiSubjectSummary.isSelected()) {
+                if (model.quantifier.getQuantifiers().get(i).isAbsolute()) continue;
                 summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, objects1, objects2 , model.summarizers);
             } else {
                 summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, model.runs, model.summarizers);
