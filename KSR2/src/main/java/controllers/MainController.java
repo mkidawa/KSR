@@ -191,6 +191,22 @@ public class MainController {
             values[i][9] = Double.toString(T10);
             values[i][10] = Double.toString(T11);
 
+            // to ma być potem z gui (suma musi być równa 1)
+            List<Double> weights = new ArrayList<>(Arrays.asList(
+                    0.6,
+                    0.04,
+                    0.04,
+                    0.04,
+                    0.04,
+                    0.04,
+                    0.04,
+                    0.04,
+                    0.04,
+                    0.04,
+                    0.04
+            ));
+            double T = Math.round(model.measures.goodnessOfTheSummary(summary, weights) * 100d) / 100d;
+
             text += model.quantifier.getQuantifiers().get(i).getLinguisticVariableName() + " of runs ";
             if(model.qualifier != null) {
                 text +=" having / being " + model.qualifier.getLinguisticVariableName() + " " + model.qualifier.getLabelName();
@@ -203,7 +219,7 @@ public class MainController {
             }
             text += ".\n";
             if(!shouldGenerateTables.isSelected()){
-                text += "[T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
+                text += "T = " + T + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
             }
         }
         for (int j = 0; j < nrOfCurrentComboBoxes; j++){

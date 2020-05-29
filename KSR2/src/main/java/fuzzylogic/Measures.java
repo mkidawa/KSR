@@ -1,5 +1,7 @@
 package fuzzylogic;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Measures<T> {
@@ -144,5 +146,26 @@ public class Measures<T> {
         return 2 * Math.pow(0.5, summary.getQualifier().getAll().size());
     }
 
+    public double goodnessOfTheSummary(Summary<T> summary, List<Double> weights) {
+        if (weights.size() != 11) return 0.0;
+        List<Double> measures = new ArrayList<>(Arrays.asList(
+                degreeOfTruth(summary),
+                degreeOfImprecision(summary),
+                degreeOfCovering(summary),
+                degreeOfAppropriateness(summary),
+                lengthOfSummary(summary),
+                degreeOfQuantifierImprecision(summary),
+                degreeOfQuantifierCardinality(summary),
+                degreeOfSummarizerCardinality(summary),
+                degreeOfQualifierImprecision(summary),
+                degreeOfQualifierCardinality(summary),
+                lengthOfQualifier(summary)
+        ));
+        double T = 0.0;
+        for (int i = 0; i < measures.size(); i++) {
+            T += weights.get(i) * measures.get(i);
+        }
+        return T;
+    }
 
 }
