@@ -5,11 +5,13 @@ import java.util.function.Function;
 
 public class LinguisticVariable<T> {
     private String name;
+    private List<Label<T>> labels;
     private CrispSet<T> universe;
     private Function<T, Double> function;
 
-    public LinguisticVariable(String name, CrispSet<T> universe, Function<T, Double> function) {
+    public LinguisticVariable(String name, List<Label<T>> labels, CrispSet<T> universe, Function<T, Double> function) {
         this.name = name;
+        this.labels = labels;
         this.universe = universe;
         this.function = function;
     }
@@ -48,5 +50,13 @@ public class LinguisticVariable<T> {
 
     public void setFunction(Function<T, Double> function) {
         this.function = function;
+    }
+
+    public List<Label<T>> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<Label<T>> labels) {
+        this.labels = labels;
     }
 }
