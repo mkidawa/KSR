@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import model.RunsModel;
 import utils.LaTeXGenerator;
 
+import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -25,6 +26,7 @@ public class MainController {
     private int nrOfStartingComboBoxes = 1;
     private int nrOfCurrentComboBoxes = 1;
     private static final int COMBO_BOXES_LIMIT = 5;
+    private List<TextField> weights;
     private String generatedSummary;
 
     public void setDataCollection(MongoCollection<RunDao> dataCollection) {
@@ -80,6 +82,9 @@ public class MainController {
             model.summarizers.add(new fuzzylogic.Label<RunDao>());
             summaryTab.getChildren().add(comboBoxes.get(i));
         }
+        for (int i = 0; i < weights.size(); i++) {
+            summaryTab.getChildren().add(weights.get(i));
+        }
         summaryTab.getChildren().add(qualifier);
 
     }
@@ -116,6 +121,39 @@ public class MainController {
     @FXML
     private AnchorPane summaryTab;
 
+    @FXML
+    private TextField tf1 = new TextField();
+
+    @FXML
+    private TextField tf2 = new TextField();
+
+    @FXML
+    private TextField tf3 = new TextField();
+
+    @FXML
+    private TextField tf4 = new TextField();
+
+    @FXML
+    private TextField tf5 = new TextField();
+
+    @FXML
+    private TextField tf6 = new TextField();
+
+    @FXML
+    private TextField tf7 = new TextField();
+
+    @FXML
+    private TextField tf8 = new TextField();
+
+    @FXML
+    private TextField tf9 = new TextField();
+
+    @FXML
+    private TextField tf10 = new TextField();
+
+    @FXML
+    private TextField tf11 = new TextField();
+
     public MainController() throws FileNotFoundException {
     }
 
@@ -139,6 +177,31 @@ public class MainController {
         box.setPrefWidth(200.0);
     }
 
+    void setTextFieldProperty(TextField tf, double x, double y) {
+        tf.setLayoutX(x);
+        tf.setLayoutY(y);
+        tf.setPrefHeight(26.0);
+        tf.setPrefWidth(130.0);
+    }
+
+    @FXML
+    void checkWeights() {
+        if (new Double(weights.get(0).getText()) > 1.0) weights.get(0).setText("1.0");
+        List<Double> values = new ArrayList<>();
+        double sum = 0.0;
+        for (int i = 0; i < weights.size(); i++) {
+            values.add(new Double(weights.get(i).getText()));
+            sum += values.get(i);
+        }
+        if (sum != 1) {
+            double diff = 1 - values.get(0);
+            for (int i = 1; i < values.size(); i++) {
+                double w = Math.round((diff / (values.size() - 1)) * 1000d) / 1000d ;
+                weights.get(i).setText(String.valueOf(w));
+            }
+        }
+    }
+
     @FXML
     void initialize() {
         comboBoxes = new ArrayList<>();
@@ -152,6 +215,40 @@ public class MainController {
         comboBoxes.add(combo3);
         comboBoxes.add(combo4);
         comboBoxes.add(combo5);
+        weights = new ArrayList<>();
+        setTextFieldProperty(tf1, 1229.0, 125.0);
+        setTextFieldProperty(tf2, 1229.0, 165.0);
+        setTextFieldProperty(tf3, 1229.0, 205.0);
+        setTextFieldProperty(tf4, 1229.0, 245.0);
+        setTextFieldProperty(tf5, 1229.0, 285.0);
+        setTextFieldProperty(tf6, 1229.0, 325.0);
+        setTextFieldProperty(tf7, 1229.0, 365.0);
+        setTextFieldProperty(tf8, 1229.0, 405.0);
+        setTextFieldProperty(tf9, 1229.0, 445.0);
+        setTextFieldProperty(tf10, 1229.0, 485.0);
+        setTextFieldProperty(tf11, 1229.0, 525.0);
+        tf1.setText("0.6");
+        tf2.setText("0.04");
+        tf3.setText("0.04");
+        tf4.setText("0.04");
+        tf5.setText("0.04");
+        tf6.setText("0.04");
+        tf7.setText("0.04");
+        tf8.setText("0.04");
+        tf9.setText("0.04");
+        tf10.setText("0.04");
+        tf11.setText("0.04");
+        weights.add(tf1);
+        weights.add(tf2);
+        weights.add(tf3);
+        weights.add(tf4);
+        weights.add(tf5);
+        weights.add(tf6);
+        weights.add(tf7);
+        weights.add(tf8);
+        weights.add(tf9);
+        weights.add(tf10);
+        weights.add(tf11);
         fileGenerator.setVisible(false);
         generate.setVisible(false);
     }
@@ -164,6 +261,10 @@ public class MainController {
         String [][] quantValues = new String[1][size];
         String [] quantifier = new String[model.quantifier.getQuantifiers().size()];
         List<String> colNames = new ArrayList<>();
+        List<Double> weightValues = new ArrayList<>();
+        for (int i = 0; i < weights.size(); i++) {
+            weightValues.add(new Double(weights.get(i).getText()));
+        }
         for(int i = 0; i < model.quantifier.getQuantifiers().size(); i++)
         {
             Summary<RunDao> summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, model.runs, model.summarizers);
@@ -191,21 +292,7 @@ public class MainController {
             values[i][9] = Double.toString(T10);
             values[i][10] = Double.toString(T11);
 
-            // to ma być potem z gui (suma musi być równa 1)
-            List<Double> weights = new ArrayList<>(Arrays.asList(
-                    0.6,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04
-            ));
-            double T = Math.round(model.measures.goodnessOfTheSummary(summary, weights) * 100d) / 100d;
+            double T = Math.round(model.measures.goodnessOfTheSummary(summary, weightValues) * 100d) / 100d;
 
             text += model.quantifier.getQuantifiers().get(i).getLinguisticVariableName() + " of runs ";
             if(model.qualifier != null) {

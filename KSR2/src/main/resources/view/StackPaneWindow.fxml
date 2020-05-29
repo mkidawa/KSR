@@ -14,7 +14,7 @@
                     <font>
                         <Font name="System Bold" size="20.0" />
                     </font></Label>
-                <Label fx:id="result" alignment="TOP_LEFT" layoutX="33.0" layoutY="219.0" prefHeight="600.0" prefWidth="1302.0" wrapText="true">
+                <Label fx:id="result" alignment="TOP_LEFT" layoutX="33.0" layoutY="219.0" prefHeight="600.0" prefWidth="1106.0" wrapText="true">
                     <font>
                         <Font size="16.0" />
                     </font></Label>
@@ -31,6 +31,18 @@
                 <Button fx:id="comboGenerator2" contentDisplay="CENTER" layoutX="1050.0" layoutY="828.0" mnemonicParsing="false" onAction="#onClickClearQualifier" prefHeight="45.0" prefWidth="165.0" text="Clear qualifier" />
                 <Button fx:id="fileGenerator" layoutX="1240.0" layoutY="10.0" mnemonicParsing="false" onAction="#onClickSaveSummary" prefHeight="30.0" prefWidth="101.0" text="Save Summary" />
             <CheckBox fx:id="shouldGenerateTables" layoutX="1007.0" layoutY="18.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="221.0" text="Generate summary as LaTeX tables?" />
+            <Label layoutX="1200.0" layoutY="130.0" text="w1" />
+            <Label layoutX="1200.0" layoutY="170.0" text="w2" />
+            <Label layoutX="1200.0" layoutY="210.0" text="w3" />
+            <Label layoutX="1200.0" layoutY="250.0" text="w4" />
+            <Label layoutX="1200.0" layoutY="290.0" text="w5" />
+            <Label layoutX="1200.0" layoutY="330.0" text="w6" />
+            <Label layoutX="1200.0" layoutY="370.0" text="w7" />
+            <Label layoutX="1200.0" layoutY="410.0" text="w8" />
+            <Label layoutX="1200.0" layoutY="450.0" text="w9" />
+            <Label layoutX="1200.0" layoutY="490.0" text="w10" />
+            <Label layoutX="1200.0" layoutY="530.0" text="w11" />
+            <Button fx:id="checkWeights" onAction="#checkWeights" layoutX="1240.0" layoutY="584.0" mnemonicParsing="false" text="Check weights" />
             </children>
         </AnchorPane>
     </Tab>
