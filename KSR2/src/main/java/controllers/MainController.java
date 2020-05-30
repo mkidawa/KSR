@@ -98,6 +98,8 @@ public class MainController {
         generate.setVisible(false);
         quantifiersList.setVisible(false);
         linguisticList.setVisible(false);
+        quantifierType.setVisible(false);
+        quantifierType.getItems().addAll("Relative", "Absolute");
     }
 
     public void initializeAfterDataLoading() {
@@ -225,10 +227,10 @@ public class MainController {
     @FXML
     public void onClickGenerateResult() {
         String text = new String();
-        String [][] values = new String[model.quantifier.getQuantifiers().size()][11];
+        String [][] values = new String[model.quantifiersAll.size()][11];
         int size = model.qualifier == null ? nrOfCurrentComboBoxes : nrOfCurrentComboBoxes + 1;
         String [][] quantValues = new String[1][size];
-        String [] quantifier = new String[model.quantifier.getQuantifiers().size()];
+        String [] quantifier = new String[model.quantifiersAll.size()];
         List<String> colNames = new ArrayList<>();
         List<Double> weightValues = new ArrayList<>();
         for (int i = 0; i < weights.size(); i++) {
@@ -248,14 +250,14 @@ public class MainController {
             }
         }
 
-        for(int i = 0; i < model.quantifier.getQuantifiers().size(); i++) {
+        for(int i = 0; i < model.quantifiersAll.size(); i++) {
             Summary<RunDao> summary;
-            if (model.qualifier != null && model.quantifier.getQuantifiers().get(i).isAbsolute()) continue;
+            if (model.qualifier != null && model.quantifiersAll.get(i).isAbsolute()) continue;
             if (multiSubjectSummary.isSelected()) {
-                if (model.quantifier.getQuantifiers().get(i).isAbsolute()) continue;
-                summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, objects1, objects2 , model.selectedSummarizers);
+                if (model.quantifiersAll.get(i).isAbsolute()) continue;
+                summary = new Summary<>(model.quantifiersAll.get(i), model.qualifier, objects1, objects2 , model.selectedSummarizers);
             } else {
-                summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, model.runs, model.selectedSummarizers);
+                summary = new Summary<>(model.quantifiersAll.get(i), model.qualifier, model.runs, model.selectedSummarizers);
             }
             double T1 = Math.round(model.measures.degreeOfTruth(summary) * 100d) / 100d;
             double T2 = Math.round(model.measures.degreeOfImprecision(summary) * 100d) / 100d;
@@ -283,7 +285,7 @@ public class MainController {
 
             double T = Math.round(model.measures.goodnessOfTheSummary(summary, weightValues) * 100d) / 100d;
 
-            text += model.quantifier.getQuantifiers().get(i).getLinguisticVariableName() + " of runs ";
+            text += model.quantifiersAll.get(i).getLinguisticVariableName() + " of runs ";
 
             if (multiSubjectSummary.isSelected()) {
                 text += "by " + subject1Selected + " horses compared to runs by " + subject2Selected + " horses ";
@@ -292,7 +294,7 @@ public class MainController {
             if(model.qualifier != null) {
                 text +=" having / being " + model.qualifier.getLinguisticVariableName() + " " + model.qualifier.getLabelName();
             }
-            quantifier[i] = model.quantifier.getQuantifiers().get(i).getLinguisticVariableName();
+            quantifier[i] = model.quantifiersAll.get(i).getLinguisticVariableName();
             for (int j = 0; j < nrOfCurrentComboBoxes; j++){
                 String connective = j > 0 ? " and " : " were with ";
                 text +=  connective + model.selectedSummarizers.get(j).getLinguisticVariableName() + " " + model.selectedSummarizers.get(j).getLabelName();
@@ -316,7 +318,7 @@ public class MainController {
         setGeneratedSummary(text);
         fileGenerator.setVisible(true);
         if(shouldGenerateTables.isSelected()) {
-            LaTeXGenerator generator = new LaTeXGenerator(model.quantifier.getQuantifiers().size(), 12, Arrays.asList("Kwantyfikator","T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11"), "Miary jakości" ,values);
+            LaTeXGenerator generator = new LaTeXGenerator(model.quantifiersAll.size(), 12, Arrays.asList("Kwantyfikator","T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11"), "Miary jakości" ,values);
             LaTeXGenerator generator2 = new LaTeXGenerator(1, colNames.size(), colNames, "Parametry podsumowania" ,quantValues);
             generator.setQuantifier(quantifier);
             System.out.println(generator.generateLaTeXTable());
@@ -371,6 +373,22 @@ public class MainController {
         model.qualifier = null;
     }
 
+    @FXML
+    public void onclickAddNewQuantifier(){
+        linguisticList.setVisible(false);
+        quantifierType.setVisible(true);
+        quantifierTypeLabel.setVisible(true);
+        quantifiersList.setVisible(true);
+    }
+
+    @FXML
+    public void onclickAddNewSummarizer(){
+        quantifiersList.setVisible(false);
+        quantifierType.setVisible(false);
+        quantifierTypeLabel.setVisible(false);
+        linguisticList.setVisible(true);
+    }
+
     public void addMultiSubjectComboBoxes(Boolean checked) {
         if (checked) {
             summaryTab.getChildren().add(subject1);
@@ -400,6 +418,9 @@ public class MainController {
 
     @FXML
     private Label result;
+
+    @FXML
+    private Label quantifierTypeLabel;
 
     // Combo Boxes
 
@@ -434,6 +455,11 @@ public class MainController {
 
     @FXML
     private CheckBox multiSubjectSummary = new CheckBox();
+
+    // Choice Box
+
+    @FXML
+    private ChoiceBox<String> quantifierType = new ChoiceBox();
 
     // List Views
 

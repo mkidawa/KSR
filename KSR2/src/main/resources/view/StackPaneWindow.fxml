@@ -6,7 +6,7 @@
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900" prefWidth="1380" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
     <Tab closable="false" text="Summary Tab">
-        <AnchorPane fx:id="summaryTab">
+        <AnchorPane fx:id="summaryTab" prefWidth="1380.0">
             <children>
                 <Button fx:id="generate" contentDisplay="CENTER" layoutX="518.0" layoutY="828.0" mnemonicParsing="false" onAction="#onClickGenerateResult" prefHeight="45.0" prefWidth="165.0" text="Generate result" />
                 <Button fx:id="comboGenerator" contentDisplay="CENTER" layoutX="697.0" layoutY="828.0" mnemonicParsing="false" onAction="#onClickAddNewCombo" prefHeight="45.0" prefWidth="165.0" text="Add a new box" />
@@ -50,11 +50,12 @@
     <Tab closable="false" text="Advanced User Tab">
         <AnchorPane fx:id="advancedUserTab">
          <children>
-            <Button onAction="#checkWeights" layoutX="27.0" layoutY="33.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="139.0" text="New quantificator" />
-            <Button onAction="#checkWeights" layoutX="229.0" layoutY="33.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="105.0" text="New summarizer" />
+            <Button layoutX="27.0" layoutY="33.0" mnemonicParsing="false" onAction="#onclickAddNewQuantifier" prefHeight="30.0" prefWidth="139.0" text="New quantifier" />
+            <Button layoutX="229.0" layoutY="33.0" mnemonicParsing="false" onAction="#onclickAddNewSummarizer" prefHeight="30.0" prefWidth="105.0" text="New summarizer" />
             <ListView fx:id="quantifiersList" layoutX="27.0" layoutY="108.0" prefHeight="696.0" prefWidth="307.0" />
             <ListView fx:id="linguisticList" layoutX="27.0" layoutY="108.0" prefHeight="696.0" prefWidth="307.0" />
-            <ChoiceBox layoutX="27.0" layoutY="816.0" prefWidth="150.0" />
+             <Label fx:id="quantifierTypeLabel" layoutX="27.0" layoutY="810.0" text="Quantifier type:" />
+            <ChoiceBox fx:id="quantifierType" layoutX="27.0" layoutY="833.0" prefWidth="150.0" />
          </children>
         </AnchorPane>
     </Tab>
