@@ -34,191 +34,11 @@ public class MainController {
         model.setDataCollection(dataCollection);
     }
 
-    public void assignDataToModel() {
-        for (RunDao cur : model.getDataCollection().find()) {
-            model.addRun(cur);
-        }
-        int id = 0;
-        model.summarizerGlobal = new PredefinedSummarizer(model.runs);
-        model.summarizersAll = model.summarizerGlobal.getAllLabels();
-
-        setComboBoxProperty(qualifier, 32,156);
-        qualifier.getItems().addAll(model.getAllLabelsNames());
-        qualifier.setValue(model.getAllLabelsNames().get(0));
-        qualifier.setEditable(true);
-        qualifier.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String value) {
-                if (value != null) {
-                    model.setQualifierType(value);
-                }
-            }
-        });
-
-        for (ComboBox iterator : comboBoxes) {
-            iterator.getItems().addAll(model.getAllLabelsNames());
-            iterator.setValue(model.getAllLabelsNames().get(0));
-            iterator.setEditable(true);
-            iterator.setId(String.valueOf(id));
-            iterator.valueProperty().addListener(new ChangeListener<String>() {
-                @Override public void changed(ObservableValue ov, String t, String value) {
-                    if (!generate.isVisible()) {
-                        generate.setVisible(true);
-                    }
-                    int comboBoxId = Integer.parseInt(iterator.getId());
-                    model.setSummarizerType(comboBoxId, value);
-                }
-            });
-            id++;
-        }
-        for (int i = 0; i < nrOfStartingComboBoxes; i++) {
-            model.selectedSummarizers.add(new fuzzylogic.Label<RunDao>());
-            summaryTab.getChildren().add(comboBoxes.get(i));
-        }
-        for (int i = 0; i < weights.size(); i++) {
-            summaryTab.getChildren().add(weights.get(i));
-        }
-        summaryTab.getChildren().add(qualifier);
-
-        subject1.getItems().addAll(model.horseTypes);
-        subject2.getItems().addAll(model.horseTypes);
-        subject1.setEditable(true);
-        subject2.setEditable(true);
-        subject1.valueProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                subject1Selected = newValue;
-            }
-        });
-        subject2.valueProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                subject2Selected = newValue;
-            }
-        });
-    }
-    @FXML
-    private Button generate = new Button();
-
-    @FXML
-    private Button fileGenerator = new Button();
-
-    @FXML
-    private Label result;
-
-    @FXML
-    private CheckBox shouldGenerateTables = new CheckBox();
-
-    @FXML
-    private CheckBox multiSubjectSummary = new CheckBox();
-
-    @FXML
-    private ComboBox combo1 = new ComboBox();
-
-    @FXML
-    private ComboBox combo2 = new ComboBox();
-
-    @FXML
-    private ComboBox combo3 = new ComboBox();
-
-    @FXML
-    private ComboBox combo4 = new ComboBox();
-
-    @FXML
-    private ComboBox combo5 = new ComboBox();
-
-    @FXML
-    private ComboBox qualifier = new ComboBox();
-
-    @FXML
-    private AnchorPane summaryTab;
-
-    @FXML
-    private TextField tf1 = new TextField();
-
-    @FXML
-    private TextField tf2 = new TextField();
-
-    @FXML
-    private TextField tf3 = new TextField();
-
-    @FXML
-    private TextField tf4 = new TextField();
-
-    @FXML
-    private TextField tf5 = new TextField();
-
-    @FXML
-    private TextField tf6 = new TextField();
-
-    @FXML
-    private TextField tf7 = new TextField();
-
-    @FXML
-    private TextField tf8 = new TextField();
-
-    @FXML
-    private TextField tf9 = new TextField();
-
-    @FXML
-    private TextField tf10 = new TextField();
-
-    @FXML
-    private TextField tf11 = new TextField();
-
-    @FXML
-    private ComboBox subject1 = new ComboBox();
-
-    @FXML
-    private ComboBox subject2 = new ComboBox();
-
     public MainController() throws FileNotFoundException {
     }
 
-    public String getGeneratedSummary() {
-        return generatedSummary;
-    }
-
-    public void setGeneratedSummary(String generatedSummary) {
-        this.generatedSummary = generatedSummary;
-    }
-
-    void setComboBoxProperty(ComboBox box, double x) {
-       box.setLayoutX(x);
-       box.setLayoutY(66);
-       box.setPrefWidth(200.0);
-    }
-
-    void setComboBoxProperty(ComboBox box, double x, double y) {
-        box.setLayoutX(x);
-        box.setLayoutY(y);
-        box.setPrefWidth(200.0);
-    }
-
-    void setTextFieldProperty(TextField tf, double x, double y) {
-        tf.setLayoutX(x);
-        tf.setLayoutY(y);
-        tf.setPrefHeight(26.0);
-        tf.setPrefWidth(130.0);
-    }
-
-    @FXML
-    void checkWeights() {
-        if (new Double(weights.get(0).getText()) > 1.0) weights.get(0).setText("1.0");
-        List<Double> values = new ArrayList<>();
-        double sum = 0.0;
-        for (int i = 0; i < weights.size(); i++) {
-            values.add(new Double(weights.get(i).getText()));
-            sum += values.get(i);
-        }
-        if (sum != 1) {
-            double diff = 1 - values.get(0);
-            for (int i = 1; i < values.size(); i++) {
-                double w = Math.round((diff / (values.size() - 1)) * 1000d) / 1000d ;
-                weights.get(i).setText(String.valueOf(w));
-            }
-        }
-    }
-
+    // Initalization methods //
+    
     @FXML
     void initialize() {
         comboBoxes = new ArrayList<>();
@@ -276,6 +96,130 @@ public class MainController {
         });
         fileGenerator.setVisible(false);
         generate.setVisible(false);
+        quantifiersList.setVisible(false);
+        linguisticList.setVisible(false);
+    }
+
+    public void initializeAfterDataLoading() {
+        model.summarizerGlobal = new PredefinedSummarizer(model.runs);
+        model.summarizersAll = model.summarizerGlobal.getAllLabels();
+        model.quantifiersAll = model.quantifier.getQuantifiers();
+        initializeGUI();
+    }
+
+    public void initializeGUI() {
+        quantifiersList.getItems().addAll(model.getAllQuantifierNames());
+        linguisticList.getItems().addAll(model.getAllLinguisticVariableNames());
+    }
+
+    public void updateGUI() {
+
+    }
+
+    public void assignDataToModel() {
+        for (RunDao cur : model.getDataCollection().find()) {
+            model.addRun(cur);
+        }
+        int id = 0;
+        initializeAfterDataLoading();
+        setComboBoxProperty(qualifier, 32,156);
+        qualifier.getItems().addAll(model.getAllLabelsNames());
+        qualifier.setValue(model.getAllLabelsNames().get(0));
+        qualifier.setEditable(true);
+        qualifier.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String value) {
+                if (value != null) {
+                    model.setQualifierType(value);
+                }
+            }
+        });
+
+        for (ComboBox iterator : comboBoxes) {
+            iterator.getItems().addAll(model.getAllLabelsNames());
+            iterator.setValue(model.getAllLabelsNames().get(0));
+            iterator.setEditable(true);
+            iterator.setId(String.valueOf(id));
+            iterator.valueProperty().addListener(new ChangeListener<String>() {
+                @Override public void changed(ObservableValue ov, String t, String value) {
+                    if (!generate.isVisible()) {
+                        generate.setVisible(true);
+                    }
+                    int comboBoxId = Integer.parseInt(iterator.getId());
+                    model.setSummarizerType(comboBoxId, value);
+                }
+            });
+            id++;
+        }
+        for (int i = 0; i < nrOfStartingComboBoxes; i++) {
+            model.selectedSummarizers.add(new fuzzylogic.Label<RunDao>());
+            summaryTab.getChildren().add(comboBoxes.get(i));
+        }
+        for (int i = 0; i < weights.size(); i++) {
+            summaryTab.getChildren().add(weights.get(i));
+        }
+        summaryTab.getChildren().add(qualifier);
+
+        subject1.getItems().addAll(model.horseTypes);
+        subject2.getItems().addAll(model.horseTypes);
+        subject1.setEditable(true);
+        subject2.setEditable(true);
+        subject1.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                subject1Selected = newValue;
+            }
+        });
+        subject2.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                subject2Selected = newValue;
+            }
+        });
+    }
+
+    public String getGeneratedSummary() {
+        return generatedSummary;
+    }
+
+    public void setGeneratedSummary(String generatedSummary) {
+        this.generatedSummary = generatedSummary;
+    }
+
+    void setComboBoxProperty(ComboBox box, double x) {
+       box.setLayoutX(x);
+       box.setLayoutY(66);
+       box.setPrefWidth(200.0);
+    }
+
+    void setComboBoxProperty(ComboBox box, double x, double y) {
+        box.setLayoutX(x);
+        box.setLayoutY(y);
+        box.setPrefWidth(200.0);
+    }
+
+    void setTextFieldProperty(TextField tf, double x, double y) {
+        tf.setLayoutX(x);
+        tf.setLayoutY(y);
+        tf.setPrefHeight(26.0);
+        tf.setPrefWidth(130.0);
+    }
+
+    @FXML
+    void checkWeights() {
+        if (new Double(weights.get(0).getText()) > 1.0) weights.get(0).setText("1.0");
+        List<Double> values = new ArrayList<>();
+        double sum = 0.0;
+        for (int i = 0; i < weights.size(); i++) {
+            values.add(new Double(weights.get(i).getText()));
+            sum += values.get(i);
+        }
+        if (sum != 1) {
+            double diff = 1 - values.get(0);
+            for (int i = 1; i < values.size(); i++) {
+                double w = Math.round((diff / (values.size() - 1)) * 1000d) / 1000d ;
+                weights.get(i).setText(String.valueOf(w));
+            }
+        }
     }
 
     @FXML
@@ -437,6 +381,101 @@ public class MainController {
         }
     }
 
+    // FXML GUI OBJECTS //
 
+    // Panes //
+
+    @FXML
+    private AnchorPane summaryTab;
+
+    // Buttons //
+
+    @FXML
+    private Button generate = new Button();
+
+    @FXML
+    private Button fileGenerator = new Button();
+
+    // Labels //
+
+    @FXML
+    private Label result;
+
+    // Combo Boxes
+
+    @FXML
+    private ComboBox combo1 = new ComboBox();
+
+    @FXML
+    private ComboBox combo2 = new ComboBox();
+
+    @FXML
+    private ComboBox combo3 = new ComboBox();
+
+    @FXML
+    private ComboBox combo4 = new ComboBox();
+
+    @FXML
+    private ComboBox combo5 = new ComboBox();
+
+    @FXML
+    private ComboBox qualifier = new ComboBox();
+
+    @FXML
+    private ComboBox subject1 = new ComboBox();
+
+    @FXML
+    private ComboBox subject2 = new ComboBox();
+
+    // Checkboxes
+
+    @FXML
+    private CheckBox shouldGenerateTables = new CheckBox();
+
+    @FXML
+    private CheckBox multiSubjectSummary = new CheckBox();
+
+    // List Views
+
+    @FXML
+    private ListView<String> quantifiersList = new ListView();
+
+    @FXML
+    private ListView<String> linguisticList = new ListView();
+
+    // Text Fields
+
+    @FXML
+    private TextField tf1 = new TextField();
+
+    @FXML
+    private TextField tf2 = new TextField();
+
+    @FXML
+    private TextField tf3 = new TextField();
+
+    @FXML
+    private TextField tf4 = new TextField();
+
+    @FXML
+    private TextField tf5 = new TextField();
+
+    @FXML
+    private TextField tf6 = new TextField();
+
+    @FXML
+    private TextField tf7 = new TextField();
+
+    @FXML
+    private TextField tf8 = new TextField();
+
+    @FXML
+    private TextField tf9 = new TextField();
+
+    @FXML
+    private TextField tf10 = new TextField();
+
+    @FXML
+    private TextField tf11 = new TextField();
 
 }

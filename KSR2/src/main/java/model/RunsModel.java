@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import dao.RunDao;
 import fuzzylogic.Label;
 import fuzzylogic.Measures;
+import fuzzylogic.Quantifier;
 import fuzzyruns.PredefinedQuantifier;
 import fuzzyruns.PredefinedSummarizer;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class RunsModel {
     public Measures<RunDao> measures = new Measures<>();
     public PredefinedSummarizer summarizerGlobal;
     public PredefinedQuantifier quantifier = new PredefinedQuantifier();
+    public List<Quantifier<RunDao>> quantifiersAll = new ArrayList<>();
     public List<Label<RunDao>> summarizersAll = new ArrayList<>();
     public List<Label<RunDao>> selectedSummarizers = new ArrayList<>();
     public Label<RunDao> qualifier = null;
@@ -62,6 +64,22 @@ public class RunsModel {
         List<String> labelsToReturn = new ArrayList<>();
         for(Label<RunDao> iterator : summarizersAll) {
             labelsToReturn.add(iterator.getLinguisticVariableName() + " " + iterator.getLabelName());
+        }
+        return labelsToReturn;
+    }
+
+    public List<String> getAllQuantifierNames() {
+        List<String> namesToReturn = new ArrayList<>();
+        for(Quantifier<RunDao> iterator: quantifiersAll) {
+            namesToReturn.add(iterator.getLabelName());
+        }
+        return namesToReturn;
+    }
+
+    public List<String> getAllLinguisticVariableNames() {
+        List<String> labelsToReturn = new ArrayList<>();
+        for(Label<RunDao> iterator : summarizersAll) {
+            labelsToReturn.add(iterator.getLinguisticVariableName());
         }
         return labelsToReturn;
     }
