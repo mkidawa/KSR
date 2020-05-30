@@ -99,7 +99,52 @@ public class MainController {
         quantifiersList.setVisible(false);
         linguisticList.setVisible(false);
         quantifierType.setVisible(false);
+        aLabel.setVisible(false);
+        bLabel.setVisible(false);
+        mLabel.setVisible(false);
+        nLabel.setVisible(false);
+        aTextField.setVisible(false);
+        bTextField.setVisible(false);
+        mTextField.setVisible(false);
+        nTextField.setVisible(false);
+
         quantifierType.getItems().addAll("Relative", "Absolute");
+        functionType.getItems().addAll("Triangular", "Trapezoid");
+        functionType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            // if the item of the list is changed
+            public void changed(ObservableValue ov, Number value, Number new_value)
+            {
+                if((int) new_value == 0) {
+                    setTriangularFieldsVisible();
+                } else setTrapezoidFieldsVisible();
+            }
+        });
+    }
+
+    public void setTriangularFieldsVisible() {
+        aLabel.setVisible(true);
+        bLabel.setVisible(true);
+        mLabel.setVisible(true);
+        nLabel.setVisible(false);
+        aTextField.setVisible(true);
+        bTextField.setVisible(true);
+        bLabel.setLayoutY(250.0);
+        bTextField.setLayoutY(250.0);
+        mTextField.setVisible(true);
+        nTextField.setVisible(false);
+    }
+
+    public void setTrapezoidFieldsVisible() {
+        aLabel.setVisible(true);
+        bLabel.setVisible(true);
+        mLabel.setVisible(true);
+        nLabel.setVisible(true);
+        aTextField.setVisible(true);
+        bTextField.setVisible(true);
+        bTextField.setLayoutY(325.0);
+        bLabel.setLayoutY(325.0);
+        mTextField.setVisible(true);
+        nTextField.setVisible(true);
     }
 
     public void initializeAfterDataLoading() {
@@ -420,6 +465,18 @@ public class MainController {
     private Label result;
 
     @FXML
+    private Label aLabel;
+
+    @FXML
+    private Label mLabel;
+
+    @FXML
+    private Label bLabel;
+
+    @FXML
+    private Label nLabel;
+
+    @FXML
     private Label quantifierTypeLabel;
 
     // Combo Boxes
@@ -460,6 +517,9 @@ public class MainController {
 
     @FXML
     private ChoiceBox<String> quantifierType = new ChoiceBox();
+
+    @FXML
+    private ChoiceBox<String> functionType = new ChoiceBox();
 
     // List Views
 
@@ -504,4 +564,15 @@ public class MainController {
     @FXML
     private TextField tf11 = new TextField();
 
+    @FXML
+    private TextField aTextField;
+
+    @FXML
+    private TextField mTextField;
+
+    @FXML
+    private TextField bTextField;
+
+    @FXML
+    private TextField nTextField;
 }
