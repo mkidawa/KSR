@@ -38,7 +38,7 @@ public class MainController {
     }
 
     // Initalization methods //
-    
+
     @FXML
     void initialize() {
         comboBoxes = new ArrayList<>();
