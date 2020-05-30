@@ -85,7 +85,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Button layoutX="1192.0" layoutY="795.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="156.0" style="-fx-background-color: #5EDD5F;" text="Create new">
+            <Button fx:id="creationButton" layoutX="1192.0" layoutY="795.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="156.0" style="-fx-background-color: #5EDD5F;" text="Create new">
                <font>
                   <Font size="20.0" />
                </font>
@@ -95,7 +95,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <TextField layoutX="950.0" layoutY="619.0" prefHeight="25.0" prefWidth="406.0" />
+            <TextField fx:id="nameTextField" layoutX="950.0" layoutY="619.0" prefHeight="25.0" prefWidth="406.0" />
             <TextField fx:id="aTextField" layoutX="950.0" layoutY="100.0" prefHeight="25.0" prefWidth="406.0" />
             <TextField fx:id="mTextField" layoutX="950.0" layoutY="175.0" prefHeight="25.0" prefWidth="406.0" />
             <TextField fx:id="nTextField" layoutX="950.0" layoutY="250.0" prefHeight="25.0" prefWidth="406.0" />

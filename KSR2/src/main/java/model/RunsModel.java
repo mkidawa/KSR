@@ -84,4 +84,21 @@ public class RunsModel {
         return labelsToReturn;
     }
 
+    public Quantifier<RunDao> getQuantifierByName(String name) {
+        for (int i = 0; i < quantifiersAll.size(); i++ ){
+            if(quantifiersAll.get(i).getLabelName().equals(name)) {
+                return quantifiersAll.get(i);
+            }
+        }
+        return null;
+    };
+
+    public Label<RunDao> getSummarizerByName(String name) {
+        for (int i = 0; i < summarizersAll.size(); i++ ){
+            if(summarizersAll.get(i).getLinguisticVariableName().equals(name)) {
+                return summarizersAll.get(i);
+            }
+        }
+        return null;
+    };
 }

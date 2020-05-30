@@ -13,6 +13,38 @@ public class TrapezoidalFunction implements MembershipFunction {
         this.n = n;
     }
 
+    public double getA() {
+        return a;
+    }
+
+    public void setA(double a) {
+        this.a = a;
+    }
+
+    public double getB() {
+        return b;
+    }
+
+    public void setB(double b) {
+        this.b = b;
+    }
+
+    public double getM() {
+        return m;
+    }
+
+    public void setM(double m) {
+        this.m = m;
+    }
+
+    public double getN() {
+        return n;
+    }
+
+    public void setN(double n) {
+        this.n = n;
+    }
+
     public double getMembership(double x) {
         if (x <= a || x >= b) {
             return 0.0;

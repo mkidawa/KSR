@@ -11,6 +11,18 @@ public class TriangularFunction implements MembershipFunction {
         this.m = m;
     }
 
+    public double getA() {
+        return a;
+    }
+
+    public double getB() {
+        return b;
+    }
+
+    public double getM() {
+        return m;
+    }
+
     public double getMembership(double x) {
         if (x <= a || x >= b) {
             return 0.0;

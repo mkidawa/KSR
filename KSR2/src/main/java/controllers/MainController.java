@@ -2,13 +2,18 @@ package controllers;
 
 import com.mongodb.client.MongoCollection;
 import dao.RunDao;
+import fuzzylogic.Quantifier;
 import fuzzylogic.Summary;
+import fuzzylogic.TrapezoidalFunction;
+import fuzzylogic.TriangularFunction;
 import fuzzyruns.PredefinedSummarizer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import model.RunsModel;
 import utils.LaTeXGenerator;
@@ -156,7 +161,55 @@ public class MainController {
 
     public void initializeGUI() {
         quantifiersList.getItems().addAll(model.getAllQuantifierNames());
+        quantifiersList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Quantifier<RunDao> fillerQuantifier = model.getQuantifierByName(quantifiersList.getSelectionModel().getSelectedItem());
+                if (fillerQuantifier.isAbsolute()) {
+                    quantifierType.getSelectionModel().select(1);
+                } else {
+                    quantifierType.getSelectionModel().select(0);
+                }
+                if (fillerQuantifier.getFuzzySet().getMembershipFunction() instanceof TriangularFunction) {
+                    functionType.getSelectionModel().select(0);
+                    aTextField.setText(String.valueOf(((TriangularFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getA()));
+                    mTextField.setText(String.valueOf(((TriangularFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getM()));
+                    bTextField.setText(String.valueOf(((TriangularFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getB()));
+                } else {
+                    functionType.getSelectionModel().select(1);
+                    aTextField.setText(String.valueOf(((TrapezoidalFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getA()));
+                    mTextField.setText(String.valueOf(((TrapezoidalFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getM()));
+                    nTextField.setText(String.valueOf(((TrapezoidalFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getN()));
+                    bTextField.setText(String.valueOf(((TrapezoidalFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getB()));
+                }
+
+                nameTextField.setText(fillerQuantifier.getLabelName());
+                creationButton.setText("Update");
+            }
+        });
+
         linguisticList.getItems().addAll(model.getAllLinguisticVariableNames());
+        linguisticList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                fuzzylogic.Label<RunDao> fillerSummarizer = model.getSummarizerByName(linguisticList.getSelectionModel().getSelectedItem());
+                if (fillerSummarizer.getFuzzySet().getMembershipFunction() instanceof TriangularFunction) {
+                    functionType.getSelectionModel().select(0);
+                    aTextField.setText(String.valueOf(((TriangularFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getA()));
+                    mTextField.setText(String.valueOf(((TriangularFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getM()));
+                    bTextField.setText(String.valueOf(((TriangularFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getB()));
+                } else {
+                    functionType.getSelectionModel().select(1);
+                    aTextField.setText(String.valueOf(((TrapezoidalFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getA()));
+                    mTextField.setText(String.valueOf(((TrapezoidalFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getM()));
+                    nTextField.setText(String.valueOf(((TrapezoidalFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getN()));
+                    bTextField.setText(String.valueOf(((TrapezoidalFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getB()));
+                }
+
+                nameTextField.setText(fillerSummarizer.getLabelName());
+                creationButton.setText("Update");
+            }
+        });
     }
 
     public void updateGUI() {
@@ -459,6 +512,9 @@ public class MainController {
     @FXML
     private Button fileGenerator = new Button();
 
+    @FXML
+    private Button creationButton = new Button();
+
     // Labels //
 
     @FXML
@@ -575,4 +631,7 @@ public class MainController {
 
     @FXML
     private TextField nTextField;
+
+    @FXML
+    private TextField nameTextField;
 }
