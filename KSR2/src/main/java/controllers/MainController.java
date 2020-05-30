@@ -1,7 +1,6 @@
 package controllers;
 
 import com.mongodb.client.MongoCollection;
-import com.sun.xml.internal.ws.api.FeatureConstructor;
 import dao.RunDao;
 import fuzzylogic.Summary;
 import fuzzyruns.PredefinedSummarizer;
@@ -14,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import model.RunsModel;
 import utils.LaTeXGenerator;
 
-import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -42,26 +40,23 @@ public class MainController {
         }
         int id = 0;
         model.summarizerGlobal = new PredefinedSummarizer(model.runs);
-        //model.qualifier = model.summarizerGlobal.ageYoung;
+        model.summarizersAll = model.summarizerGlobal.getAllLabels();
+
         setComboBoxProperty(qualifier, 32,156);
-        qualifier.getItems().addAll(model.summarizer.getAllSummarizerLabels());
-        qualifier.setValue(model.summarizer.getAllSummarizerLabels().get(0));
+        qualifier.getItems().addAll(model.getAllLabelsNames());
+        qualifier.setValue(model.getAllLabelsNames().get(0));
         qualifier.setEditable(true);
         qualifier.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String value) {
-                try {
-                    if (value != null) {
-                        model.setQualifierType(value);
-                    }
-                } catch (IllegalAccessException | NoSuchFieldException e) {
-                    e.printStackTrace();
+                if (value != null) {
+                    model.setQualifierType(value);
                 }
             }
         });
 
         for (ComboBox iterator : comboBoxes) {
-            iterator.getItems().addAll(model.summarizer.getAllSummarizerLabels());
-            iterator.setValue(model.summarizer.getAllSummarizerLabels().get(0));
+            iterator.getItems().addAll(model.getAllLabelsNames());
+            iterator.setValue(model.getAllLabelsNames().get(0));
             iterator.setEditable(true);
             iterator.setId(String.valueOf(id));
             iterator.valueProperty().addListener(new ChangeListener<String>() {
@@ -70,19 +65,13 @@ public class MainController {
                         generate.setVisible(true);
                     }
                     int comboBoxId = Integer.parseInt(iterator.getId());
-                    try {
-                        model.setSummarizerType(comboBoxId, value);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
+                    model.setSummarizerType(comboBoxId, value);
                 }
             });
             id++;
         }
         for (int i = 0; i < nrOfStartingComboBoxes; i++) {
-            model.summarizers.add(new fuzzylogic.Label<RunDao>());
+            model.selectedSummarizers.add(new fuzzylogic.Label<RunDao>());
             summaryTab.getChildren().add(comboBoxes.get(i));
         }
         for (int i = 0; i < weights.size(); i++) {
@@ -320,9 +309,9 @@ public class MainController {
             if (model.qualifier != null && model.quantifier.getQuantifiers().get(i).isAbsolute()) continue;
             if (multiSubjectSummary.isSelected()) {
                 if (model.quantifier.getQuantifiers().get(i).isAbsolute()) continue;
-                summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, objects1, objects2 , model.summarizers);
+                summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, objects1, objects2 , model.selectedSummarizers);
             } else {
-                summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, model.runs, model.summarizers);
+                summary = new Summary<>(model.quantifier.getQuantifiers().get(i), model.qualifier, model.runs, model.selectedSummarizers);
             }
             double T1 = Math.round(model.measures.degreeOfTruth(summary) * 100d) / 100d;
             double T2 = Math.round(model.measures.degreeOfImprecision(summary) * 100d) / 100d;
@@ -362,8 +351,8 @@ public class MainController {
             quantifier[i] = model.quantifier.getQuantifiers().get(i).getLinguisticVariableName();
             for (int j = 0; j < nrOfCurrentComboBoxes; j++){
                 String connective = j > 0 ? " and " : " were with ";
-                text +=  connective + model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
-                quantValues[0][j] = model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
+                text +=  connective + model.selectedSummarizers.get(j).getLinguisticVariableName() + " " + model.selectedSummarizers.get(j).getLabelName();
+                quantValues[0][j] = model.selectedSummarizers.get(j).getLinguisticVariableName() + " " + model.selectedSummarizers.get(j).getLabelName();
             }
             text += ".\n";
             if(!shouldGenerateTables.isSelected()){
@@ -373,7 +362,7 @@ public class MainController {
         for (int j = 0; j < nrOfCurrentComboBoxes; j++){
             colNames.add("Sumaryzator" + Integer.toString(j + 1));
             String connective = j > 0 ? " and " : " were with ";
-            quantValues[0][j] = model.summarizers.get(j).getLinguisticVariableName() + " " + model.summarizers.get(j).getLabelName();
+            quantValues[0][j] = model.selectedSummarizers.get(j).getLinguisticVariableName() + " " + model.selectedSummarizers.get(j).getLabelName();
         }
         if (model.qualifier != null) {
             colNames.add("Kwalifikator");
@@ -404,7 +393,7 @@ public class MainController {
             connective.setLayoutY(68);
             connective.setAlignment(Pos.CENTER);
             summaryTab.getChildren().add(connective);
-            model.summarizers.add(new fuzzylogic.Label<RunDao>());
+            model.selectedSummarizers.add(new fuzzylogic.Label<RunDao>());
             nrOfCurrentComboBoxes++;
         }
     }

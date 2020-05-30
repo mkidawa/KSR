@@ -11,16 +11,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RunsModel {
-    public RunsModel() {};
     public List<RunDao> runs = new ArrayList<>();
     public void addRun(RunDao r) { runs.add(r); }
     private MongoCollection<RunDao> dataCollection;
 
     public Measures<RunDao> measures = new Measures<>();
-    public PredefinedSummarizer summarizer = new PredefinedSummarizer(runs);
     public PredefinedSummarizer summarizerGlobal;
     public PredefinedQuantifier quantifier = new PredefinedQuantifier();
-    public List<Label<RunDao>> summarizers = new ArrayList<>();
+    public List<Label<RunDao>> summarizersAll = new ArrayList<>();
+    public List<Label<RunDao>> selectedSummarizers = new ArrayList<>();
     public Label<RunDao> qualifier = null;
     public List<String> horseTypes = new ArrayList<>(Arrays.asList(
             "Gelding",
@@ -39,14 +38,32 @@ public class RunsModel {
         return dataCollection;
     }
 
-    public void setSummarizerType(int id, String type) throws IllegalAccessException, NoSuchFieldException {
-        Label<RunDao> label = (Label<RunDao>) summarizerGlobal.getClass().getField(type).get(summarizerGlobal);
-        summarizers.set(id, label);
+    public void setSummarizerType(int id, String type) {
+        String[] summarizerData = type.split("(?<!\\G\\w+)\\s");
+
+        for(int i = 0; i < summarizersAll.size(); i++) {
+            if( summarizersAll.get(i).getLinguisticVariableName().equals(summarizerData[0]) && summarizersAll.get(i).getLabelName().equals(summarizerData[1])){
+                selectedSummarizers.set(id,summarizersAll.get(i));
+            }
+        }
     }
 
-    public void setQualifierType(String type) throws NoSuchFieldException, IllegalAccessException {
-        Label<RunDao> label = (Label<RunDao>) summarizerGlobal.getClass().getField(type).get(summarizerGlobal);
-        qualifier = label;
+    public void setQualifierType(String type) {
+        String[] qualifierData = type.split("(?<!\\G\\w+)\\s");
+
+        for(int i = 0; i < summarizersAll.size(); i++) {
+            if( summarizersAll.get(i).getLinguisticVariableName().equals(qualifierData[0]) && summarizersAll.get(i).getLabelName().equals(qualifierData[1])){
+               qualifier = summarizersAll.get(i);
+            }
+        }
+    }
+
+    public List<String> getAllLabelsNames() {
+        List<String> labelsToReturn = new ArrayList<>();
+        for(Label<RunDao> iterator : summarizersAll) {
+            labelsToReturn.add(iterator.getLinguisticVariableName() + " " + iterator.getLabelName());
+        }
+        return labelsToReturn;
     }
 
 }
