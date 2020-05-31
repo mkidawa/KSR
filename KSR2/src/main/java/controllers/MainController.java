@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.RunsModel;
 import utils.LaTeXGenerator;
 
@@ -429,6 +430,9 @@ public class MainController {
                     updateExistingSummarizer(summarizerFactory.CreateLabel(nameTextField.getText(), params, false, linguisticNameField.getSelectionModel().getSelectedItem()), nameTextField.getText(), linguisticNameField.getSelectionModel().getSelectedItem());
                 }
             }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Form incomplete, can't create a new object!", ButtonType.OK, ButtonType.CANCEL);
+            alert.showAndWait();
         }
     }
 
@@ -800,4 +804,7 @@ public class MainController {
 
     @FXML
     private TextField nameTextField;
+
+    @FXML
+    private AnchorPane advancedUserTab;
 }
