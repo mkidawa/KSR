@@ -611,6 +611,7 @@ public class MainController {
             summaryTab.getChildren().remove(summaryTab.lookup("#label"+idOfLabelToRemove));
             nrOfCurrentComboBoxes--;
         }
+        updateGUI();
     }
 
     @FXML
