@@ -2,10 +2,7 @@ package controllers;
 
 import com.mongodb.client.MongoCollection;
 import dao.RunDao;
-import fuzzylogic.Quantifier;
-import fuzzylogic.Summary;
-import fuzzylogic.TrapezoidalFunction;
-import fuzzylogic.TriangularFunction;
+import fuzzylogic.*;
 import fuzzyruns.PredefinedSummarizer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import model.RunsModel;
@@ -235,7 +233,8 @@ public class MainController {
     }
 
     public void updateGUI() {
-
+        quantifiersList.getItems().clear();
+        quantifiersList.getItems().addAll(model.getAllQuantifierNames());
     }
 
     public boolean checkIfAllInputsAreValid() {
@@ -397,10 +396,54 @@ public class MainController {
     @FXML
     public void createNewLabel() {
         if(checkIfAllInputsAreValid()){
-            System.out.println("Valid!");
+            if(quantifiersList.isVisible()){
+                QuantifierFactory quantifierFactory = new QuantifierFactory();
+                if(!checkIfUpdate()){
+                    ArrayList<Double> params = generateParams();
+                    boolean isAbsolute = quantifierType.getSelectionModel().getSelectedIndex() != 0;
+                    addNewQuantifier(quantifierFactory.CreateLabel(nameTextField.getText(),params, isAbsolute));
+                } else {
+                    ArrayList<Double> params = generateParams();
+                    boolean isAbsolute = quantifierType.getSelectionModel().getSelectedIndex() != 0;
+                    updateExistingQualifier(quantifierFactory.CreateLabel(nameTextField.getText(),params, isAbsolute), nameTextField.getText());
+                }
+            }
+        }
+    }
+
+    public ArrayList<Double> generateParams() {
+        if(functionType.getSelectionModel().getSelectedIndex() == 0) {
+            return new ArrayList<Double>() {
+                {
+                    add(Double.valueOf(aTextField.getText()));
+                    add(Double.valueOf(bTextField.getText()));
+                    add(Double.valueOf(mTextField.getText()));
+                }
+            };
         } else {
-            System.out.println("Invalid");
-        };
+            return new ArrayList<Double>() {
+                {
+                    add(Double.valueOf(aTextField.getText()));
+                    add(Double.valueOf(bTextField.getText()));
+                    add(Double.valueOf(mTextField.getText()));
+                    add(Double.valueOf(nTextField.getText()));
+                }
+            };
+        }
+    }
+
+    public void addNewQuantifier(Quantifier<RunDao> quantifier) {
+        model.quantifiersAll.add(quantifier);
+        updateGUI();
+    }
+
+    public void updateExistingQualifier(Quantifier<RunDao> quantifier, String labelName) {
+        model.quantifiersAll.set(model.getIndexOfQualifier(labelName), quantifier);
+        updateGUI();
+    }
+
+    public boolean checkIfUpdate() {
+        return creationButton.getText().equals("Update");
     }
 
     @FXML

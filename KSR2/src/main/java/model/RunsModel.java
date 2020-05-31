@@ -119,4 +119,14 @@ public class RunsModel {
         List<String> names = getAllLabelsNames();
         return names.contains(name);
     }
+
+    public int getIndexOfQualifier(String labelName) {
+        for(int i = 0; i < quantifiersAll.size(); i++) {
+            if(quantifiersAll.get(i).getLabelName().equals(labelName)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }
