@@ -16,18 +16,18 @@ public class PredefinedSummarizer {
     }
     public List<Label<RunDao>> getAllLabels() {return labels;}
 
-    private List<RunDao> objects;
+    public List<RunDao> objects;
     private List<Label<RunDao>> labels = new ArrayList<>();
 
-    private LinguisticVariable<RunDao> age = new LinguisticVariable<>("horse age", objects, ageFunc);
-    private LinguisticVariable<RunDao> declaredWeight = new LinguisticVariable<>("declared weight", objects, declaredWeightFunc);
-    private LinguisticVariable<RunDao> rating = new LinguisticVariable<>("horse rating", objects, ratingFunc);
-    private LinguisticVariable<RunDao> finishTime = new LinguisticVariable<>("finish time", objects, finishTimeFunc);
-    private LinguisticVariable<RunDao> winOdds = new LinguisticVariable<>("win odds", objects, winOddsFun);
-    private LinguisticVariable<RunDao> lengthsBehind = new LinguisticVariable<>("lengths behind winner", objects, lengthsBehindFunc);
-    private LinguisticVariable<RunDao> actualWeight = new LinguisticVariable<>("actual weight", objects, actualWeightFunc);
-    private LinguisticVariable<RunDao> positionInSection = new LinguisticVariable<>("position in section", objects, positionInSectionFunc);
-    private LinguisticVariable<RunDao> lengthsBehindInSection = new LinguisticVariable<>("lengths behind in section", objects, lengthsBehindInSectionFunc);
+    public LinguisticVariable<RunDao> age = new LinguisticVariable<>("horse age", objects, ageFunc);
+    public LinguisticVariable<RunDao> declaredWeight = new LinguisticVariable<>("declared weight", objects, declaredWeightFunc);
+    public LinguisticVariable<RunDao> rating = new LinguisticVariable<>("horse rating", objects, ratingFunc);
+    public LinguisticVariable<RunDao> finishTime = new LinguisticVariable<>("finish time", objects, finishTimeFunc);
+    public LinguisticVariable<RunDao> winOdds = new LinguisticVariable<>("win odds", objects, winOddsFun);
+    public LinguisticVariable<RunDao> lengthsBehind = new LinguisticVariable<>("lengths behind winner", objects, lengthsBehindFunc);
+    public LinguisticVariable<RunDao> actualWeight = new LinguisticVariable<>("actual weight", objects, actualWeightFunc);
+    public LinguisticVariable<RunDao> positionInSection = new LinguisticVariable<>("position in section", objects, positionInSectionFunc);
+    public LinguisticVariable<RunDao> lengthsBehindInSection = new LinguisticVariable<>("lengths behind in section", objects, lengthsBehindInSectionFunc);
 
     private static Function<RunDao, Double> ageFunc = run -> (double) run.getHorseAge();
     private static Function<RunDao, Double> declaredWeightFunc = RunDao::getDeclaredWeight;

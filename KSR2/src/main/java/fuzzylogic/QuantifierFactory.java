@@ -1,12 +1,13 @@
 package fuzzylogic;
 
+import com.mongodb.lang.Nullable;
 import dao.RunDao;
 
 import java.util.List;
 
-public class QuantifierFactory implements LabelFactory<Quantifier<RunDao>> {
+public class QuantifierFactory<T> implements LabelFactory<Quantifier<T>> {
     @Override
-    public Quantifier<RunDao> CreateLabel(String Name, List<Double> params, boolean isAbsolute) {
+    public Quantifier<T> CreateLabel(String Name, List<Double> params, boolean isAbsolute, @Nullable String linguisticVariableName) {
         if (params.size() == 4) {
             return new Quantifier<>(
                     Name,

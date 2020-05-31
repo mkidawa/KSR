@@ -212,7 +212,7 @@ public class MainController {
         });
 
         linguisticNameField.getItems().addAll(model.getAllLinguisticVariablesNames());
-        linguisticList.getItems().addAll(model.getAllLinguisticVariableNames());
+        linguisticList.getItems().addAll(model.getAllSummarizersLabels());
         linguisticList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -234,7 +234,17 @@ public class MainController {
 
     public void updateGUI() {
         quantifiersList.getItems().clear();
+        linguisticList.getItems().clear();
+        linguisticList.getItems().addAll(model.getAllSummarizersLabels());
         quantifiersList.getItems().addAll(model.getAllQuantifierNames());
+        for (int i = 0; i < nrOfCurrentComboBoxes; i++) {
+            comboBoxes.get(i).getItems().clear();
+            comboBoxes.get(i).getItems().addAll(model.getAllSummarizersLabels());
+            comboBoxes.get(i).setValue(model.getAllSummarizersLabels().get(0));
+        }
+        qualifier.getItems().clear();
+        qualifier.getItems().addAll(model.getAllSummarizersLabels());
+        qualifier.setValue(model.getAllSummarizersLabels().get(0));
     }
 
     public boolean checkIfAllInputsAreValid() {
@@ -294,8 +304,8 @@ public class MainController {
         int id = 0;
         initializeAfterDataLoading();
         setComboBoxProperty(qualifier, 32,156);
-        qualifier.getItems().addAll(model.getAllLabelsNames());
-        qualifier.setValue(model.getAllLabelsNames().get(0));
+        qualifier.getItems().addAll(model.getAllSummarizersLabels());
+        qualifier.setValue(model.getAllSummarizersLabels().get(0));
         qualifier.setEditable(true);
         qualifier.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String value) {
@@ -306,17 +316,19 @@ public class MainController {
         });
 
         for (ComboBox iterator : comboBoxes) {
-            iterator.getItems().addAll(model.getAllLabelsNames());
-            iterator.setValue(model.getAllLabelsNames().get(0));
+            iterator.getItems().addAll(model.getAllSummarizersLabels());
+            iterator.setValue(model.getAllSummarizersLabels().get(0));
             iterator.setEditable(true);
             iterator.setId(String.valueOf(id));
             iterator.valueProperty().addListener(new ChangeListener<String>() {
                 @Override public void changed(ObservableValue ov, String t, String value) {
-                    if (!generate.isVisible()) {
-                        generate.setVisible(true);
+                    if(value != "" && iterator.getItems().size() != 0){
+                        if (!generate.isVisible()) {
+                            generate.setVisible(true);
+                        }
+                        int comboBoxId = Integer.parseInt(iterator.getId());
+                        model.setSummarizerType(comboBoxId, value);
                     }
-                    int comboBoxId = Integer.parseInt(iterator.getId());
-                    model.setSummarizerType(comboBoxId, value);
                 }
             });
             id++;
@@ -401,11 +413,20 @@ public class MainController {
                 if(!checkIfUpdate()){
                     ArrayList<Double> params = generateParams();
                     boolean isAbsolute = quantifierType.getSelectionModel().getSelectedIndex() != 0;
-                    addNewQuantifier(quantifierFactory.CreateLabel(nameTextField.getText(),params, isAbsolute));
+                    addNewQuantifier(quantifierFactory.CreateLabel(nameTextField.getText(),params, isAbsolute, null));
                 } else {
                     ArrayList<Double> params = generateParams();
                     boolean isAbsolute = quantifierType.getSelectionModel().getSelectedIndex() != 0;
-                    updateExistingQualifier(quantifierFactory.CreateLabel(nameTextField.getText(),params, isAbsolute), nameTextField.getText());
+                    updateExistingQualifier(quantifierFactory.CreateLabel(nameTextField.getText(),params, isAbsolute, null), nameTextField.getText());
+                }
+            } else {
+                SummarizerFactory summarizerFactory = new SummarizerFactory(model.summarizerGlobal);
+                if(!checkIfUpdate()){
+                    ArrayList<Double> params = generateParams();
+                    addNewSummarizer(summarizerFactory.CreateLabel(nameTextField.getText(), params, false, linguisticNameField.getSelectionModel().getSelectedItem()));
+                } else {
+                    ArrayList<Double> params = generateParams();
+                    updateExistingSummarizer(summarizerFactory.CreateLabel(nameTextField.getText(), params, false, linguisticNameField.getSelectionModel().getSelectedItem()), nameTextField.getText(), linguisticNameField.getSelectionModel().getSelectedItem());
                 }
             }
         }
@@ -432,6 +453,11 @@ public class MainController {
         }
     }
 
+    public void addNewSummarizer(fuzzylogic.Label<RunDao> label) {
+        model.summarizersAll.add(label);
+        updateGUI();
+    }
+
     public void addNewQuantifier(Quantifier<RunDao> quantifier) {
         model.quantifiersAll.add(quantifier);
         updateGUI();
@@ -439,6 +465,11 @@ public class MainController {
 
     public void updateExistingQualifier(Quantifier<RunDao> quantifier, String labelName) {
         model.quantifiersAll.set(model.getIndexOfQualifier(labelName), quantifier);
+        updateGUI();
+    }
+
+    public void updateExistingSummarizer(fuzzylogic.Label<RunDao> label, String labelName, String linguisticVariableName) {
+        model.summarizersAll.set(model.getIndexOfSummarizer(labelName, linguisticVariableName), label);
         updateGUI();
     }
 
@@ -564,6 +595,7 @@ public class MainController {
             model.selectedSummarizers.add(new fuzzylogic.Label<RunDao>());
             nrOfCurrentComboBoxes++;
         }
+        updateGUI();
     }
 
     @FXML
