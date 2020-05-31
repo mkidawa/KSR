@@ -484,7 +484,7 @@ public class MainController {
     @FXML
     public void onClickGenerateResult() {
         String text = new String();
-        String [][] values = new String[model.quantifiersAll.size()][11];
+        String [][] values = new String[model.quantifiersAll.size()][12];
         int size = model.qualifier == null ? nrOfCurrentComboBoxes : nrOfCurrentComboBoxes + 1;
         String [][] quantValues = new String[1][size];
         String [] quantifier = new String[model.quantifiersAll.size()];
@@ -527,20 +527,21 @@ public class MainController {
             double T9 = Math.round(model.measures.degreeOfQualifierImprecision(summary) * 100d) / 100d;
             double T10 = Math.round(model.measures.degreeOfQualifierCardinality(summary) * 100d) / 100d;
             double T11 = Math.round(model.measures.lengthOfQualifier(summary) * 100d) / 100d;
-            // PLZ DON'T LOOK
-            values[i][0] = Double.toString(T1);
-            values[i][1] = Double.toString(T2);
-            values[i][2] = Double.toString(T3);
-            values[i][3] = Double.toString(T4);
-            values[i][4] = Double.toString(T5);
-            values[i][5] = Double.toString(T6);
-            values[i][6] = Double.toString(T7);
-            values[i][7] = Double.toString(T8);
-            values[i][8] = Double.toString(T9);
-            values[i][9] = Double.toString(T10);
-            values[i][10] = Double.toString(T11);
 
             double T = Math.round(model.measures.goodnessOfTheSummary(summary, weightValues) * 100d) / 100d;
+            // PLZ DON'T LOOK
+            values[i][0] = Double.toString(T);
+            values[i][1] = Double.toString(T1);
+            values[i][2] = Double.toString(T2);
+            values[i][3] = Double.toString(T3);
+            values[i][4] = Double.toString(T4);
+            values[i][5] = Double.toString(T5);
+            values[i][6] = Double.toString(T6);
+            values[i][7] = Double.toString(T7);
+            values[i][8] = Double.toString(T8);
+            values[i][9] = Double.toString(T9);
+            values[i][10] = Double.toString(T10);
+            values[i][11] = Double.toString(T11);
 
             text += model.quantifiersAll.get(i).getLabelName() + " of runs ";
 
@@ -551,7 +552,7 @@ public class MainController {
             if(model.qualifier != null) {
                 text +=" having / being " + model.qualifier.getLinguisticVariableName() + " " + model.qualifier.getLabelName();
             }
-            quantifier[i] = model.quantifiersAll.get(i).getLinguisticVariableName();
+            quantifier[i] = model.quantifiersAll.get(i).getLabelName();
             for (int j = 0; j < nrOfCurrentComboBoxes; j++){
                 String connective = j > 0 ? " and " : " were with ";
                 text +=  connective + model.selectedSummarizers.get(j).getLinguisticVariableName() + " " + model.selectedSummarizers.get(j).getLabelName();
@@ -575,7 +576,7 @@ public class MainController {
         setGeneratedSummary(text);
         fileGenerator.setVisible(true);
         if(shouldGenerateTables.isSelected()) {
-            LaTeXGenerator generator = new LaTeXGenerator(model.quantifiersAll.size(), 12, Arrays.asList("Kwantyfikator","T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11"), "Miary jakości" ,values);
+            LaTeXGenerator generator = new LaTeXGenerator(model.quantifiersAll.size(), 13, Arrays.asList("Kwantyfikator","T","T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11"), "Miary jakości" ,values);
             LaTeXGenerator generator2 = new LaTeXGenerator(1, colNames.size(), colNames, "Parametry podsumowania" ,quantValues);
             generator.setQuantifier(quantifier);
             System.out.println(generator.generateLaTeXTable());
