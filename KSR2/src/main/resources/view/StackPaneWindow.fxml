@@ -78,7 +78,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Button fx:id="creationButton" layoutX="1192.0" layoutY="795.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="156.0" style="-fx-background-color: #5EDD5F;" text="Create new">
+            <Button fx:id="creationButton" onAction="#createNewLabel" layoutX="1192.0" layoutY="795.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="156.0" style="-fx-background-color: #5EDD5F;" text="Create new">
                <font>
                   <Font size="20.0" />
                </font>

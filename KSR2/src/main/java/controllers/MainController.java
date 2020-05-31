@@ -238,6 +238,56 @@ public class MainController {
 
     }
 
+    public boolean checkIfAllInputsAreValid() {
+        boolean isValid;
+        boolean textFieldsInvalid;
+        boolean nameInvalid;
+        boolean lingVarInvalid;
+        boolean quantTypeInvalid;
+        boolean functionTypeInvalid;
+        boolean aInvalid;
+        boolean bInvalid;
+        boolean mInvalid;
+        boolean nInvalid;
+
+        if(quantifiersList.isVisible()) {
+            quantTypeInvalid = quantifierType.getSelectionModel().isEmpty();
+            nameInvalid = nameTextField.getText() == null || nameTextField.getText().trim().isEmpty();
+            functionTypeInvalid = functionType.getSelectionModel().isEmpty();
+            if (functionTypeInvalid && functionType.getSelectionModel().getSelectedIndex() == 0) {
+                aInvalid = aTextField.getText().trim().equals("");
+                bInvalid = bTextField.getText().trim().equals("");
+                mInvalid = mTextField.getText().trim().equals("");
+                textFieldsInvalid = aInvalid || bInvalid || mInvalid;
+            } else {
+                aInvalid = aTextField.getText().trim().equals("");
+                bInvalid = bTextField.getText().trim().equals("");
+                mInvalid = mTextField.getText().trim().equals("");
+                nInvalid = nTextField.getText().trim().equals("");
+                textFieldsInvalid = aInvalid || bInvalid || mInvalid || nInvalid;
+            }
+            return !(quantTypeInvalid || nameInvalid || functionTypeInvalid || textFieldsInvalid);
+        } else if (linguisticList.isVisible()) {
+            nameInvalid = nameTextField.getText() == null || nameTextField.getText().trim().isEmpty();
+            lingVarInvalid = linguisticNameField.getSelectionModel().isEmpty();
+            functionTypeInvalid = functionType.getSelectionModel().isEmpty();
+            if (functionTypeInvalid && functionType.getSelectionModel().getSelectedIndex() == 0) {
+                aInvalid = aTextField.getText().trim().equals("");
+                bInvalid = bTextField.getText().trim().equals("");
+                mInvalid = mTextField.getText().trim().equals("");
+                textFieldsInvalid = aInvalid || bInvalid || mInvalid;
+            } else {
+                aInvalid = aTextField.getText().trim().equals("");
+                bInvalid = bTextField.getText().trim().equals("");
+                mInvalid = mTextField.getText().trim().equals("");
+                nInvalid = nTextField.getText().trim().equals("");
+                textFieldsInvalid = aInvalid || bInvalid || mInvalid || nInvalid;
+            }
+            return !(nameInvalid || lingVarInvalid || functionTypeInvalid || textFieldsInvalid);
+        }
+        return false;
+    }
+
     public void assignDataToModel() {
         for (RunDao cur : model.getDataCollection().find()) {
             model.addRun(cur);
@@ -342,6 +392,15 @@ public class MainController {
                 weights.get(i).setText(String.valueOf(w));
             }
         }
+    }
+
+    @FXML
+    public void createNewLabel() {
+        if(checkIfAllInputsAreValid()){
+            System.out.println("Valid!");
+        } else {
+            System.out.println("Invalid");
+        };
     }
 
     @FXML
