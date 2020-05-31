@@ -159,6 +159,21 @@ public class MainController {
         initializeGUI();
     }
 
+    public void fillTextFieldsWithLabelData(fuzzylogic.Label<RunDao> label) {
+        if (label.getFuzzySet().getMembershipFunction() instanceof TriangularFunction) {
+            functionType.getSelectionModel().select(0);
+            aTextField.setText(String.valueOf(((TriangularFunction) label.getFuzzySet().getMembershipFunction()).getA()));
+            mTextField.setText(String.valueOf(((TriangularFunction) label.getFuzzySet().getMembershipFunction()).getM()));
+            bTextField.setText(String.valueOf(((TriangularFunction) label.getFuzzySet().getMembershipFunction()).getB()));
+        } else {
+            functionType.getSelectionModel().select(1);
+            aTextField.setText(String.valueOf(((TrapezoidalFunction) label.getFuzzySet().getMembershipFunction()).getA()));
+            mTextField.setText(String.valueOf(((TrapezoidalFunction) label.getFuzzySet().getMembershipFunction()).getM()));
+            nTextField.setText(String.valueOf(((TrapezoidalFunction) label.getFuzzySet().getMembershipFunction()).getN()));
+            bTextField.setText(String.valueOf(((TrapezoidalFunction) label.getFuzzySet().getMembershipFunction()).getB()));
+        }
+    }
+
     public void initializeGUI() {
         quantifiersList.getItems().addAll(model.getAllQuantifierNames());
         quantifiersList.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -170,43 +185,50 @@ public class MainController {
                 } else {
                     quantifierType.getSelectionModel().select(0);
                 }
-                if (fillerQuantifier.getFuzzySet().getMembershipFunction() instanceof TriangularFunction) {
-                    functionType.getSelectionModel().select(0);
-                    aTextField.setText(String.valueOf(((TriangularFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getA()));
-                    mTextField.setText(String.valueOf(((TriangularFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getM()));
-                    bTextField.setText(String.valueOf(((TriangularFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getB()));
-                } else {
-                    functionType.getSelectionModel().select(1);
-                    aTextField.setText(String.valueOf(((TrapezoidalFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getA()));
-                    mTextField.setText(String.valueOf(((TrapezoidalFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getM()));
-                    nTextField.setText(String.valueOf(((TrapezoidalFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getN()));
-                    bTextField.setText(String.valueOf(((TrapezoidalFunction) fillerQuantifier.getFuzzySet().getMembershipFunction()).getB()));
-                }
+                fillTextFieldsWithLabelData(fillerQuantifier);
 
                 nameTextField.setText(fillerQuantifier.getLabelName());
-                creationButton.setText("Update");
             }
         });
 
+        nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(quantifiersList.isVisible() && model.checkIfQuantifierExists(newValue)){
+                creationButton.setText("Update");
+                quantifiersList.getSelectionModel().select(newValue);
+                Quantifier<RunDao> fillerQuantifier = model.getQuantifierByName(quantifiersList.getSelectionModel().getSelectedItem());
+                if (fillerQuantifier.isAbsolute()) {
+                    quantifierType.getSelectionModel().select(1);
+                } else {
+                    quantifierType.getSelectionModel().select(0);
+                }
+                fillTextFieldsWithLabelData(fillerQuantifier);
+            } else if (linguisticList.isVisible() && model.checkIfSummarizerExists( linguisticNameField.getSelectionModel().getSelectedItem() + ", " + newValue)) {
+                creationButton.setText("Update");
+                linguisticList.getSelectionModel().select(linguisticNameField.getSelectionModel().getSelectedItem() + ", " + newValue);
+                fuzzylogic.Label<RunDao> fillerSummarizer = model.getSummarizerByName(linguisticList.getSelectionModel().getSelectedItem());
+                fillTextFieldsWithLabelData(fillerSummarizer);
+                nameTextField.setText(fillerSummarizer.getLabelName());
+            } else {
+                creationButton.setText("Create");
+            }
+        });
+
+        linguisticNameField.getItems().addAll(model.getAllLinguisticVariablesNames());
         linguisticList.getItems().addAll(model.getAllLinguisticVariableNames());
         linguisticList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 fuzzylogic.Label<RunDao> fillerSummarizer = model.getSummarizerByName(linguisticList.getSelectionModel().getSelectedItem());
-                if (fillerSummarizer.getFuzzySet().getMembershipFunction() instanceof TriangularFunction) {
-                    functionType.getSelectionModel().select(0);
-                    aTextField.setText(String.valueOf(((TriangularFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getA()));
-                    mTextField.setText(String.valueOf(((TriangularFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getM()));
-                    bTextField.setText(String.valueOf(((TriangularFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getB()));
-                } else {
-                    functionType.getSelectionModel().select(1);
-                    aTextField.setText(String.valueOf(((TrapezoidalFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getA()));
-                    mTextField.setText(String.valueOf(((TrapezoidalFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getM()));
-                    nTextField.setText(String.valueOf(((TrapezoidalFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getN()));
-                    bTextField.setText(String.valueOf(((TrapezoidalFunction) fillerSummarizer.getFuzzySet().getMembershipFunction()).getB()));
+                fillTextFieldsWithLabelData(fillerSummarizer);
+                nameTextField.setText(fillerSummarizer.getLabelName());
+
+                for (int i = 0; i < linguisticNameField.getItems().size(); i++) {
+                    if (fillerSummarizer.getLinguisticVariableName().equals(linguisticNameField.getItems().get(i)))
+                    {
+                        linguisticNameField.getSelectionModel().select(i);
+                    }
                 }
 
-                nameTextField.setText(fillerSummarizer.getLabelName());
                 creationButton.setText("Update");
             }
         });
@@ -383,7 +405,7 @@ public class MainController {
 
             double T = Math.round(model.measures.goodnessOfTheSummary(summary, weightValues) * 100d) / 100d;
 
-            text += model.quantifiersAll.get(i).getLinguisticVariableName() + " of runs ";
+            text += model.quantifiersAll.get(i).getLabelName() + " of runs ";
 
             if (multiSubjectSummary.isSelected()) {
                 text += "by " + subject1Selected + " horses compared to runs by " + subject2Selected + " horses ";
@@ -477,6 +499,8 @@ public class MainController {
         quantifierType.setVisible(true);
         quantifierTypeLabel.setVisible(true);
         quantifiersList.setVisible(true);
+        linguisticNameField.setVisible(false);
+        linguisticNameLabel.setVisible(false);
     }
 
     @FXML
@@ -485,6 +509,8 @@ public class MainController {
         quantifierType.setVisible(false);
         quantifierTypeLabel.setVisible(false);
         linguisticList.setVisible(true);
+        linguisticNameField.setVisible(true);
+        linguisticNameLabel.setVisible(true);
     }
 
     public void addMultiSubjectComboBoxes(Boolean checked) {
@@ -535,6 +561,9 @@ public class MainController {
     @FXML
     private Label quantifierTypeLabel;
 
+    @FXML
+    private Label linguisticNameLabel;
+
     // Combo Boxes
 
     @FXML
@@ -576,6 +605,9 @@ public class MainController {
 
     @FXML
     private ChoiceBox<String> functionType = new ChoiceBox();
+
+    @FXML
+    private ChoiceBox<String> linguisticNameField = new ChoiceBox();
 
     // List Views
 

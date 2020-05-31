@@ -7,9 +7,8 @@ import fuzzylogic.Measures;
 import fuzzylogic.Quantifier;
 import fuzzyruns.PredefinedQuantifier;
 import fuzzyruns.PredefinedSummarizer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.*;
 
 public class RunsModel {
     public List<RunDao> runs = new ArrayList<>();
@@ -41,7 +40,7 @@ public class RunsModel {
     }
 
     public void setSummarizerType(int id, String type) {
-        String[] summarizerData = type.split("(?<!\\G\\w+)\\s");
+        String[] summarizerData = type.split(", ");
 
         for(int i = 0; i < summarizersAll.size(); i++) {
             if( summarizersAll.get(i).getLinguisticVariableName().equals(summarizerData[0]) && summarizersAll.get(i).getLabelName().equals(summarizerData[1])){
@@ -51,7 +50,7 @@ public class RunsModel {
     }
 
     public void setQualifierType(String type) {
-        String[] qualifierData = type.split("(?<!\\G\\w+)\\s");
+        String[] qualifierData = type.split(", ");
 
         for(int i = 0; i < summarizersAll.size(); i++) {
             if( summarizersAll.get(i).getLinguisticVariableName().equals(qualifierData[0]) && summarizersAll.get(i).getLabelName().equals(qualifierData[1])){
@@ -63,9 +62,17 @@ public class RunsModel {
     public List<String> getAllLabelsNames() {
         List<String> labelsToReturn = new ArrayList<>();
         for(Label<RunDao> iterator : summarizersAll) {
-            labelsToReturn.add(iterator.getLinguisticVariableName() + " " + iterator.getLabelName());
+            labelsToReturn.add(iterator.getLinguisticVariableName() + ", " + iterator.getLabelName());
         }
         return labelsToReturn;
+    }
+
+    public LinkedHashSet<String> getAllLinguisticVariablesNames() {
+        LinkedHashSet<String> set = new LinkedHashSet<>();
+        for(Label<RunDao> iterator : summarizersAll) {
+            set.add(iterator.getLinguisticVariableName());
+        }
+        return set;
     }
 
     public List<String> getAllQuantifierNames() {
@@ -79,7 +86,7 @@ public class RunsModel {
     public List<String> getAllLinguisticVariableNames() {
         List<String> labelsToReturn = new ArrayList<>();
         for(Label<RunDao> iterator : summarizersAll) {
-            labelsToReturn.add(iterator.getLinguisticVariableName());
+            labelsToReturn.add(iterator.getLinguisticVariableName() + ", " + iterator.getLabelName());
         }
         return labelsToReturn;
     }
@@ -94,11 +101,22 @@ public class RunsModel {
     };
 
     public Label<RunDao> getSummarizerByName(String name) {
-        for (int i = 0; i < summarizersAll.size(); i++ ){
-            if(summarizersAll.get(i).getLinguisticVariableName().equals(name)) {
+        String[] summarizerData = name.split(", ");
+        for(int i = 0; i < summarizersAll.size(); i++) {
+            if( summarizersAll.get(i).getLinguisticVariableName().equals(summarizerData[0]) && summarizersAll.get(i).getLabelName().equals(summarizerData[1])){
                 return summarizersAll.get(i);
             }
         }
         return null;
     };
+
+    public boolean checkIfQuantifierExists(String name) {
+        List<String> names = getAllQuantifierNames();
+        return names.contains(name);
+    };
+
+    public boolean checkIfSummarizerExists(String name) {
+        List<String> names = getAllLabelsNames();
+        return names.contains(name);
+    }
 }

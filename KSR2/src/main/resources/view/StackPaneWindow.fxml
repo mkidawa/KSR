@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="951.0" prefWidth="1380" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="951.0" prefWidth="1380" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
     <Tab closable="false" text="Summary Tab">
         <AnchorPane fx:id="summaryTab" prefHeight="817.0" prefWidth="1380.0">
             <children>
@@ -96,6 +89,14 @@
                </font>
             </Label>
             <TextField fx:id="nameTextField" layoutX="950.0" layoutY="619.0" prefHeight="25.0" prefWidth="406.0" />
+
+             <Label fx:id="linguisticNameLabel" layoutX="950.0" layoutY="661" prefHeight="30.0" prefWidth="159.0" text="Linguistic variable">
+                 <font>
+                     <Font size="20.0" />
+                 </font>
+             </Label>
+             <ChoiceBox fx:id="linguisticNameField" layoutX="950.0" layoutY="703" prefWidth="406.0" />
+
             <TextField fx:id="aTextField" layoutX="950.0" layoutY="100.0" prefHeight="25.0" prefWidth="406.0" />
             <TextField fx:id="mTextField" layoutX="950.0" layoutY="175.0" prefHeight="25.0" prefWidth="406.0" />
             <TextField fx:id="nTextField" layoutX="950.0" layoutY="250.0" prefHeight="25.0" prefWidth="406.0" />
