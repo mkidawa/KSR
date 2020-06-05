@@ -43,7 +43,7 @@ public class PredefinedSummarizer {
         this.objects = objects;
         labels.add(new Label<>(age, new TrapezoidalFunction(0.0, 4.5, 0.0, 3.5), "young"));
         labels.add(new Label<>(age, new TriangularFunction(3.5, 6.5, 5.0),"middle-aged"));
-        labels.add(new Label<>(age, new TrapezoidalFunction(5.5, 7.0, 6.0, 7.0),"old"));
+        labels.add(new Label<>(age, new TrapezoidalFunction(5.5, 10.0, 7.0, 10.0),"old"));
         labels.add(new Label<>(declaredWeight, new TrapezoidalFunction(693.0, 850.0, 693.0, 800.0),"very light"));
         labels.add(new Label<>(declaredWeight, new TrapezoidalFunction(800.0, 1000.0, 850.0, 950.0),"light"));
         labels.add(new Label<>(declaredWeight, new TrapezoidalFunction(950.0, 1150.0, 1025.0, 1075.0),"medium"));
