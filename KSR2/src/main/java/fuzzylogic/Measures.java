@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Measures<T> {
+    public double lukasiewiczImplication (double a, double b) {
+        return Math.min(1 - a + b, 1);
+    }
+
     public double degreeOfTruth(Summary<T> summary) {
         double r = 0;
         double r2 = 0;
@@ -20,7 +24,7 @@ public class Measures<T> {
                 }
             }
             m = summary.getObjects().size();
-            if (summary.getObjects2() != null) {
+            if (summary.getObjects2() != null) { // wielopodmiotowe
                 for (T obj : summary.getObjects2()) {
                     if (summary.getSummarizers().size() == 1) {
                         r2 += summary.getSummarizers().get(0).getMembership(obj);
@@ -32,22 +36,42 @@ public class Measures<T> {
             }
         } else {
             if (summary.getObjects2() != null) {
-                for (T obj : summary.getObjects()) {
-                    if (summary.getSummarizers().size() == 1) {
-                        r += summary.getSummarizers().get(0).getMembership(obj);
-                    } else if (summary.getSummarizers().size() > 1) {
-                        r += Label.<T>andConnective(summary.getSummarizers(), obj);
+                if (summary.getMultiForm() == 2) { // druga forma
+                    for (T obj : summary.getObjects()) {
+                        if (summary.getSummarizers().size() == 1) {
+                            r += summary.getSummarizers().get(0).getMembership(obj);
+                        } else if (summary.getSummarizers().size() > 1) {
+                            r += Label.<T>andConnective(summary.getSummarizers(), obj);
+                        }
                     }
-                }
-                m = summary.getObjects().size();
-                for (T obj : summary.getObjects2()) {
-                    if (summary.getSummarizers().size() == 1) {
-                        r2 += Math.min(summary.getSummarizers().get(0).getMembership(obj), summary.getQualifier().getMembership(obj));
-                    } else if (summary.getSummarizers().size() > 1) {
-                        r2 += Math.min(Label.<T>andConnective(summary.getSummarizers(), obj), summary.getQualifier().getMembership(obj));
+                    m = summary.getObjects().size();
+                    for (T obj : summary.getObjects2()) {
+                        if (summary.getSummarizers().size() == 1) {
+                            r2 += Math.min(summary.getSummarizers().get(0).getMembership(obj), summary.getQualifier().getMembership(obj));
+                        } else if (summary.getSummarizers().size() > 1) {
+                            r2 += Math.min(Label.<T>andConnective(summary.getSummarizers(), obj), summary.getQualifier().getMembership(obj));
+                        }
                     }
+                    m2 = summary.getObjects2().size();
                 }
-                m2 = summary.getObjects2().size();
+                if (summary.getMultiForm() == 3) { // trzecia forma
+                    for (T obj : summary.getObjects2()) {
+                        if (summary.getSummarizers().size() == 1) {
+                            r2 += summary.getSummarizers().get(0).getMembership(obj);
+                        } else if (summary.getSummarizers().size() > 1) {
+                            r2 += Label.<T>andConnective(summary.getSummarizers(), obj);
+                        }
+                    }
+                    m2 = summary.getObjects2().size();
+                    for (T obj : summary.getObjects()) {
+                        if (summary.getSummarizers().size() == 1) {
+                            r += Math.min(summary.getSummarizers().get(0).getMembership(obj), summary.getQualifier().getMembership(obj));
+                        } else if (summary.getSummarizers().size() > 1) {
+                            r += Math.min(Label.<T>andConnective(summary.getSummarizers(), obj), summary.getQualifier().getMembership(obj));
+                        }
+                    }
+                    m = summary.getObjects().size();
+                }
             } else {
                 for (T obj : summary.getObjects()) {
                     if (summary.getSummarizers().size() == 1) {
@@ -64,6 +88,10 @@ public class Measures<T> {
             return summary.getQuantifier().getFuzzySet().getMembershipFunction().getMembership(r);
         } else if (!summary.getQuantifier().isAbsolute()) {
             if (summary.getObjects2() != null) {
+                if (summary.getMultiForm() == 4) { // czwarta forma
+                    System.out.println("r2 " + r2 + " m2 " + m2 + " r " + r + " m " + m);
+                    return 1 - lukasiewiczImplication(r / m, r2 / m2);
+                }
                 return summary.getQuantifier().getFuzzySet().getMembershipFunction().getMembership((r / m) / (r / m + r2 / m2));
             }
             return summary.getQuantifier().getFuzzySet().getMembershipFunction().getMembership(r / m);

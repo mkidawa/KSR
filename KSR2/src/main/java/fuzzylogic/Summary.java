@@ -8,6 +8,7 @@ public class Summary<T> {
     private List<T> objects;
     private List<T> objects2;
     private List<Label<T>> summarizers;
+    private int multiForm = 0;
 
     public Summary(Quantifier<T> quantifier, Label<T> qualifier, List<T> objects, List<Label<T>> summarizers) {
         this.quantifier = quantifier;
@@ -66,6 +67,14 @@ public class Summary<T> {
 
     public void setObjects2(List<T> objects2) {
         this.objects2 = objects2;
+    }
+
+    public int getMultiForm() {
+        return multiForm;
+    }
+
+    public void setMultiForm(int multiForm) {
+        this.multiForm = multiForm;
     }
 
     @Override

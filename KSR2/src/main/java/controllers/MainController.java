@@ -513,6 +513,7 @@ public class MainController {
             if (multiSubjectSummary.isSelected()) {
                 if (model.quantifiersAll.get(i).isAbsolute()) continue;
                 summary = new Summary<>(model.quantifiersAll.get(i), model.qualifier, objects1, objects2 , model.selectedSummarizers);
+                summary.setMultiForm(2);
             } else {
                 summary = new Summary<>(model.quantifiersAll.get(i), model.qualifier, model.runs, model.selectedSummarizers);
             }
@@ -543,15 +544,30 @@ public class MainController {
             values[i][10] = Double.toString(T10);
             values[i][11] = Double.toString(T11);
 
-            text += model.quantifiersAll.get(i).getLabelName() + " of runs ";
+            if (summary.getMultiForm() == 4) {
+                text += "More runs ";
+            } else {
+                text += model.quantifiersAll.get(i).getLabelName() + " of runs ";
+            }
 
             if (multiSubjectSummary.isSelected()) {
-                text += "by " + subject1Selected + " horses compared to runs by " + subject2Selected + " horses ";
+                if (summary.getMultiForm() == 4) {
+                    text += "by " + subject1Selected + " horses than runs by " + subject2Selected + " horses ";
+                } else if (summary.getMultiForm() == 3) {
+                    text += "by " + subject1Selected + " horses ";
+                } else {
+                    text += "by " + subject1Selected + " horses compared to runs by " + subject2Selected + " horses ";
+                }
             }
 
             if(model.qualifier != null) {
-                text +=" having / being " + model.qualifier.getLinguisticVariableName() + " " + model.qualifier.getLabelName();
+                text += "having / being " + model.qualifier.getLinguisticVariableName() + " " + model.qualifier.getLabelName();
             }
+
+            if (summary.getMultiForm() == 3) {
+                text += " compared to runs by " + subject2Selected + " horses";
+            }
+
             quantifier[i] = model.quantifiersAll.get(i).getLabelName();
             for (int j = 0; j < nrOfCurrentComboBoxes; j++){
                 String connective = j > 0 ? " and " : " were with ";
@@ -566,6 +582,7 @@ public class MainController {
                     text += "T = " + T + " [T1 = " + T1 + ", T2 = " + T2 + ", T3 = " + T3 + ", T4 = " + T4 + ", T5 = " + T5 + ", T6 = " + T6 + ", T7 = " + T7 + ", T8 = " + T8 + ", T9 = " + T9 + ", T10 = " + T10 + ", T11 = " + T11 + "]. \n";
                 }
             }
+            if (summary.getMultiForm() == 4) break;
         }
         for (int j = 0; j < nrOfCurrentComboBoxes; j++){
             colNames.add("Sumaryzator" + Integer.toString(j + 1));
